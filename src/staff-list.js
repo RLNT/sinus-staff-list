@@ -446,9 +446,10 @@ registerPlugin(
         function getStaffGroupFromClient(client, staffGroups) {
             let group = null;
             staffGroups.forEach(staffGroup => {
-                if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups))
+                if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
                     group = staffGroup;
-                return;
+                    return;
+                }
             });
 
             return group;
