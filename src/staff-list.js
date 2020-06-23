@@ -478,13 +478,11 @@ registerPlugin(
         }
 
         function isInAfkChannel(client) {
-            let found = false;
-            client.getChannels().forEach(channel => {
-                if (channel.id() === config.afkChannel) found = true;
-                return;
-            });
+            for (let channel of client.getChannels()) {
+                if (config.afkChannels.includes(channel.id())) return true;
+            }
 
-            return found;
+            return false;
         }
 
         function getFormattedUsername(staffUser) {
