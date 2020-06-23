@@ -69,9 +69,9 @@ registerPlugin(
                 ]
             },
             {
-                name: 'afkChannels',
-                title: 'AFK-Channel List',
-                type: 'array',
+                name: 'afkChannel',
+                title: 'AFK-Channel > Define the IDs of the AFK-channels! (*)',
+                type: 'strings',
                 indent: 2,
                 conditions: [
                     {
@@ -81,14 +81,6 @@ registerPlugin(
                     {
                         field: 'awayChannel',
                         value: 0
-                    }
-                ],
-                vars: [
-                    {
-                        name: 'channel',
-                        title: 'AFK-Channel > Define the afk channel! (*)',
-                        indent: 2,
-                        type: 'channel'
                     }
                 ]
             },
