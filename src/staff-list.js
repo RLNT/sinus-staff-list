@@ -444,13 +444,12 @@ registerPlugin(
         }
 
         function getStaffGroupFromClient(client, staffGroups) {
-            let group = null;
             staffGroups.forEach(staffGroup => {
                 if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups))
                     return staffGroup;
             });
 
-            return group;
+            return null;
         }
 
         function isStaffClient(client, clients) {
