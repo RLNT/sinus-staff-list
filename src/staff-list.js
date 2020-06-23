@@ -57,7 +57,7 @@ registerPlugin(
             },
             {
                 name: 'awayChannel',
-                title: 'Away-Channel > Do you want to set someone away/afk if they join an afk channel?',
+                title: 'Away-Channel > Do you want to set someone away/afk if they join any afk channels?',
                 type: 'select',
                 options: ['Yes', 'No'],
                 indent: 1,
@@ -69,9 +69,9 @@ registerPlugin(
                 ]
             },
             {
-                name: 'afkChannel',
-                title: 'AFK-Channel > Define the afk channel! (*)',
-                type: 'channel',
+                name: 'afkChannels',
+                title: 'AFK-Channel List',
+                type: 'array',
                 indent: 2,
                 conditions: [
                     {
@@ -81,6 +81,14 @@ registerPlugin(
                     {
                         field: 'awayChannel',
                         value: 0
+                    }
+                ],
+                vars: [
+                    {
+                        name: 'channel',
+                        title: 'AFK-Channel > Define the afk channel! (*)',
+                        indent: 2,
+                        type: 'channel'
                     }
                 ]
             },
@@ -673,8 +681,8 @@ registerPlugin(
                     // on afk channel join or leave
                     if (
                         awayChannel &&
-                        ((fromChannel !== undefined && fromChannel.id() === config.afkChannel) ||
-                            (toChannel !== undefined && toChannel.id() === config.afkChannel))
+                        ((fromChannel !== undefined && config.afkChannels.contains(fromChannel.id())) ||
+                            (toChannel !== undefined && config.afkChannels.contains(toChannel.id())))
                     ) {
                         updateDescription(staffGroups, channel);
                     }
