@@ -447,7 +447,7 @@ registerPlugin(
             let group = null;
             staffGroups.forEach(staffGroup => {
                 if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups))
-                    group = staffGroup;
+                    return staffGroup;
             });
 
             return group;
