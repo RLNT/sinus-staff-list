@@ -57,7 +57,7 @@ registerPlugin(
             },
             {
                 name: 'awayChannel',
-                title: 'Away-Channel > Do you want to set someone away/afk if they join any afk channels?',
+                title: 'Away-Channel > Do you want to set someone away/afk if they join any afk channel?',
                 type: 'select',
                 options: ['Yes', 'No'],
                 indent: 1,
@@ -69,8 +69,8 @@ registerPlugin(
                 ]
             },
             {
-                name: 'afkChannel',
-                title: 'AFK-Channel > Define the IDs of the AFK-channels! (*)',
+                name: 'afkChannels',
+                title: 'AFK-Channels > Define a list of channel IDs that should count as AFK-channels! (*)',
                 type: 'strings',
                 indent: 2,
                 conditions: [
@@ -305,7 +305,7 @@ registerPlugin(
                     {
                         name: 'clients',
                         title:
-                            'Clients > Define a list of additional clients IDs that should also count towards this staff group!',
+                            'Clients > Define a list of additional client IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     },
@@ -608,7 +608,7 @@ registerPlugin(
                 return;
             } else if (awayChannel && config.afkChannel === undefined) {
                 log(
-                    'There was no afk channel selected although the afk channel option is enabled! Deactivating the script...'
+                    'There were no afk channels set up although the afk channel option is enabled! Deactivating the script...'
                 );
                 return;
             } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
