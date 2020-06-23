@@ -57,7 +57,7 @@ registerPlugin(
             },
             {
                 name: 'awayChannel',
-                title: 'Away-Channel > Do you want to set someone away/afk if they join an afk channel?',
+                title: 'Away-Channel > Do you want to set someone away/afk if they join any afk channel?',
                 type: 'select',
                 options: ['Yes', 'No'],
                 indent: 1,
@@ -69,9 +69,9 @@ registerPlugin(
                 ]
             },
             {
-                name: 'afkChannel',
-                title: 'AFK-Channel > Define the afk channel! (*)',
-                type: 'channel',
+                name: 'afkChannels',
+                title: 'AFK-Channels > Define a list of channel IDs that should count as AFK-channels! (*)',
+                type: 'strings',
                 indent: 2,
                 conditions: [
                     {
@@ -305,7 +305,7 @@ registerPlugin(
                     {
                         name: 'clients',
                         title:
-                            'Clients > Define a list of additional clients IDs that should also count towards this staff group!',
+                            'Clients > Define a list of additional client IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     },
@@ -482,13 +482,11 @@ registerPlugin(
         }
 
         function isInAfkChannel(client) {
-            let found = false;
-            client.getChannels().forEach(channel => {
-                if (channel.id() === config.afkChannel) found = true;
-                return;
-            });
+            for (let channel of client.getChannels()) {
+                if (config.afkChannels.includes(channel.id())) return true;
+            }
 
-            return found;
+            return false;
         }
 
         function getFormattedUsername(staffUser) {
@@ -610,9 +608,9 @@ registerPlugin(
             if (config.channel === undefined) {
                 log('There was no channel selected to display the staff list! Deactivating script...');
                 return;
-            } else if (awayChannel && config.afkChannel === undefined) {
+            } else if (awayChannel && config.afkChannels === undefined) {
                 log(
-                    'There was no afk channel selected although the afk channel option is enabled! Deactivating the script...'
+                    'There were no afk channels set up although the afk channel option is enabled! Deactivating the script...'
                 );
                 return;
             } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
@@ -677,8 +675,8 @@ registerPlugin(
                     // on afk channel join or leave
                     if (
                         awayChannel &&
-                        ((fromChannel !== undefined && fromChannel.id() === config.afkChannel) ||
-                            (toChannel !== undefined && toChannel.id() === config.afkChannel))
+                        ((fromChannel !== undefined && config.afkChannels.includes(fromChannel.id())) ||
+                            (toChannel !== undefined && config.afkChannels.includes(toChannel.id())))
                     ) {
                         updateDescription(staffGroups, channel);
                     }
