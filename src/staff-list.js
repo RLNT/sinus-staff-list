@@ -280,7 +280,7 @@ registerPlugin(
             {
                 name: 'priority',
                 title:
-                    'The order in which you define the groups is important! The script will go from top to bottom and overwrite each group so the last group you defined has the highest priority. Should a user be a member of two groups, they will only be displayed in the last one.'
+                    'The order in which you define the groups is important! Priority of the groups goes from top to bottom. If a user has two groups, they will be displayed in the group which comes first in the config.'
             },
             {
                 name: 'staffGroups',
