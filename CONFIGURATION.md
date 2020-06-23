@@ -100,17 +100,16 @@ Please click the option you want to configure to get more information.
 
         <details>
             <summary>
-                AFK-Channel
+                AFK-Channels
             </summary>
 
         *Details*:
         - required option | default value: none
-        - enter the channel id
-        - you can also select the channel from a dropdown menu if the bot is connected to the TeamSpeak server
+        - enter the channel ids
 
         *Info*:
-        - defines the afk-channel in the TeamSpeak where users that are *away* normally go
-        - if a user joins this channel, they will be set to *away* in the list
+        - defines the afk-channels in the TeamSpeak where users that are *away* normally go
+        - if a user joins one of the channels, they will be set to *away* in the list
         </details>
     </details>
     <details>
