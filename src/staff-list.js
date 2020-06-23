@@ -604,7 +604,7 @@ registerPlugin(
             if (config.channel === undefined) {
                 log('There was no channel selected to display the staff list! Deactivating script...');
                 return;
-            } else if (awayChannel && config.afkChannel === undefined) {
+            } else if (awayChannel && config.afkChannels === undefined) {
                 log(
                     'There were no afk channels set up although the afk channel option is enabled! Deactivating the script...'
                 );
@@ -671,8 +671,8 @@ registerPlugin(
                     // on afk channel join or leave
                     if (
                         awayChannel &&
-                        ((fromChannel !== undefined && config.afkChannels.contains(fromChannel.id())) ||
-                            (toChannel !== undefined && config.afkChannels.contains(toChannel.id())))
+                        ((fromChannel !== undefined && config.afkChannels.includes(fromChannel.id())) ||
+                            (toChannel !== undefined && config.afkChannels.includes(toChannel.id())))
                     ) {
                         updateDescription(staffGroups, channel);
                     }
