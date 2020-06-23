@@ -444,15 +444,17 @@ registerPlugin(
         }
 
         function getStaffGroupFromClient(client, staffGroups) {
-            let group = null;
-            staffGroups.forEach(staffGroup => {
-                if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
-                    group = staffGroup;
-                    return;
-                }
-            });
+            log('dude: ' + client.uid());
 
-            return group;
+            for (let staffGroup of staffGroups) {
+                log('check: ' + staffGroup.id);
+                if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
+                    log('found: ' + staffGroup.id);
+                    return staffGroup;
+                }
+            }
+
+            return null;
         }
 
         function isStaffClient(client, clients) {
