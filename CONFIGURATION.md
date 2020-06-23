@@ -29,7 +29,7 @@ A good start to configure a script is to understand its functionality. Here are 
 4. Users of a staff group are sorted by their status (online, away, offline) and alphabetically.
 5. The script detects a lot of misconfiguration and provides standard values. Just make sure to fill out each field marked with (*).
 6. If there is a severe error that affects the script's functionality, it will be written in the log and the script won't be executed.
-7. Last but most important thing: the staff groups you list in the configuration are prioritized from top to bottom. A user can only be listed in one group in the staff list. If a user is a member of two groups and both are added to the list, they will only show up in the group which is the lowest in the config.
+7. Last but most important thing: the staff groups you list in the configuration are prioritized from top to bottom. A user can only be listed in one group in the staff list. If a user is a member of two groups and both are added to the list, they will only show up in the group which is the highest in the config.
 
 
 ## **General Options**
