@@ -139,6 +139,96 @@ Please click the option you want to configure to get more information.
     - deactivated speakers do not count to this
     </details>
 </details>
+<details>
+    <summary>
+        Remove-Command
+    </summary>
+
+*Details*:
+- optional option | default value: `No`
+- select Yes or No
+
+*Info*:
+- defines if there should be a command to manually remove users from the stafflist/database
+- this can be used to manually remove a user from the database if you removed a group while they were offline for example
+
+*Advanced Options*:
+- the following options are only shown if you activated the remove command
+
+    <details>
+        <summary>
+            Command
+        </summary>
+
+    *Details*:
+    - optional option | default value: `!remove`
+    - enter the command
+    - it's case sensitive
+
+    *Info*:
+    - defines the phrase that should be the remove command
+    </details>
+    <details>
+        <summary>
+            Server
+        </summary>
+
+    *Details*:
+    - optional option | default value: `unchecked`
+    - check the box or leave it empty
+
+    *Info*:
+    - defines if the bot should listen to the command when it's sent in the server chat
+    </details>
+    <details>
+        <summary>
+            Channel
+        </summary>
+
+    *Details*:
+    - optional option | default value: `unchecked`
+    - check the box or leave it empty
+
+    *Info*:
+    - defines if the bot should listen to the command when it's sent in the channel chat
+    </details>
+    <details>
+        <summary>
+            Private
+        </summary>
+
+    *Details*:
+    - optional option | default value: `unchecked`
+    - check the box or leave it empty
+
+    *Info*:
+    - defines if the bot should listen to the command when it's sent in the private chat
+    </details>
+    <details>
+        <summary>
+            Clients
+        </summary>
+
+    *Details*:
+    - optional option | default value: `empty`
+    - enter a list of client uids
+
+    *Info*:
+    - defines if a user has the permission to use the remove command
+    </details>
+    <details>
+        <summary>
+            Groups
+        </summary>
+
+    *Details*:
+    - optional option | default value: `empty`
+    - enter a list of group ids
+
+    *Info*:
+    - defines if a group has the permission to use the remove command
+    </details>
+</details>
 
 
 ## **Text & Format Options**
