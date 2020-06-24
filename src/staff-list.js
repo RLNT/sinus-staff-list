@@ -706,6 +706,14 @@ registerPlugin(
             } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
                 log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
                 return;
+            } else if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
+                log(
+                    "There are no users whitelisted for the remove command although it's enabled! Deactivating script..."
+                );
+                return;
+            } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
+                log('There is no text channel selected for the bot to listen to commands! Deactivating script...');
+                return;
             } else {
                 log('The script has loaded successfully!');
 
