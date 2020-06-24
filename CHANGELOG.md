@@ -11,6 +11,17 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.5.0] - 2020-06-24
+
+### Added
+- ablity to set multiple afk channels ([#14](https://github.com/RLNT/sinus-staff-list/issues/14))
+- manual command to remove a user from the stafflist/databse ([#13](https://github.com/RLNT/sinus-staff-list/issues/13))
+
+### Changed
+- group priority going from top to bottom ([#17](https://github.com/RLNT/sinus-staff-list/pull/17))
+- increased performance by cancelling loops on result
+
+
 ## [1.3.0] - 2020-05-28
 
 ### Added
@@ -66,6 +77,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.5.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.3.0..v1.5.0
 [1.3.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.2.0..v1.3.0
 [1.2.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.1.0..v1.2.0
 [1.1.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0..v1.1.0
