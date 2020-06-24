@@ -444,12 +444,8 @@ registerPlugin(
         }
 
         function getStaffGroupFromClient(client, staffGroups) {
-            log('dude: ' + client.uid());
-
             for (let staffGroup of staffGroups) {
-                log('check: ' + staffGroup.id);
                 if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
-                    log('found: ' + staffGroup.id);
                     return staffGroup;
                 }
             }
@@ -680,6 +676,10 @@ registerPlugin(
                     ) {
                         updateDescription(staffGroups, channel);
                     }
+                } else {
+                    // if user has no list group but is in the database, delete them
+                    removeUser(uid);
+                    updateDescription(staffGroups, channel);
                 }
             });
 
@@ -743,8 +743,9 @@ registerPlugin(
             event.on('serverGroupRemoved', event => {
                 const client = event.client;
                 if (client.isSelf()) return;
-                const group = getStaffGroupFromClient(client, staffGroups);
                 if (groupList.includes(event.serverGroup.id())) {
+                    const group = getStaffGroupFromClient(client, staffGroups);
+
                     if (group === null) {
                         removeUser(client.uid());
                     } else {
