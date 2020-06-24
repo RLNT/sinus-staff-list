@@ -9,7 +9,7 @@
 registerPlugin(
     {
         name: 'Staff List',
-        version: '1.3.0',
+        version: '1.5.0',
         description:
             'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
@@ -552,14 +552,11 @@ registerPlugin(
         }
 
         function hasStaffGroup(client, groups) {
-            let found = false;
-            client.getServerGroups().forEach(clientGroup => {
-                if (groups.includes(clientGroup.id())) {
-                    found = true;
-                    return;
-                }
-            });
-            return found;
+            for (let clientGroup of client.getServerGroups()) {
+                if (groups.includes(clientGroup.id())) return true;
+            }
+
+            return false;
         }
 
         function isAway(client) {
