@@ -425,6 +425,17 @@ registerPlugin(
             awayMute = false;
             awayDeaf = false;
         }
+        const removeCommand = varDef(config.removeCommand, 1) == 0;
+        let command, commandServer, commandChannel, commandPrivate, commandClients, commandGroups;
+        if (removeCommand) {
+            command = varDef(config.command, '!remove');
+            commandServer = varDef(config.commandServer, false);
+            commandChannel = varDef(config.commandChannel, false);
+            commandPrivate = varDef(config.commandPrivate, false);
+            commandClients = varDef(config.commandClients, []);
+            commandGroups = varDef(config.commandGroups, []);
+        }
+
         let username, userLine, groupSection, separator, phraseOnline, phraseAway, phraseOffline;
         if (template) {
             username = varDef(config.tUsername, '[B]%name%[/B]');
