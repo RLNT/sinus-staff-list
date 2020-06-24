@@ -552,14 +552,11 @@ registerPlugin(
         }
 
         function hasStaffGroup(client, groups) {
-            let found = false;
-            client.getServerGroups().forEach(clientGroup => {
-                if (groups.includes(clientGroup.id())) {
-                    found = true;
-                    return;
-                }
-            });
-            return found;
+            for (let clientGroup of client.getServerGroups()) {
+                if (groups.includes(clientGroup.id())) return true;
+            }
+
+            return false;
         }
 
         function isAway(client) {
