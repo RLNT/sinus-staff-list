@@ -521,6 +521,9 @@ registerPlugin(
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
                 updateStaffList();
+                return true;
+            } else {
+                return false;
             }
         }
 
