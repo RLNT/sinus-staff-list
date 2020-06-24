@@ -743,8 +743,9 @@ registerPlugin(
             event.on('serverGroupRemoved', event => {
                 const client = event.client;
                 if (client.isSelf()) return;
-                const group = getStaffGroupFromClient(client, staffGroups);
                 if (groupList.includes(event.serverGroup.id())) {
+                    const group = getStaffGroupFromClient(client, staffGroups);
+
                     if (group === null) {
                         removeUser(client.uid());
                     } else {
