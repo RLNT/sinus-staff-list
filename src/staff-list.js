@@ -111,6 +111,86 @@ registerPlugin(
                 ]
             },
             {
+                name: 'removeCommand',
+                title:
+                    'Remove-Command > Do you want a command to remove users manually from the staff list? This can be helpful if they were offline when you removed them from a group or for similar situations.',
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'command',
+                title: 'Command > Define the command you want to use to delete a user manually!',
+                type: 'string',
+                placeholder: '!remove',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandServer',
+                title: "Server > Do you want the bot to accept the command when it's sent in the server chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandChannel',
+                title: "Channel > Do you want the bot to accept the command when it's sent in the channel chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandPrivate',
+                title: "Private > Do you want the bot to accept the command when it's sent in the private chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandClients',
+                title: 'Clients > Define a list of client IDs that should be allowed to use the command!',
+                type: 'strings',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandGroups',
+                title: 'Groups > Define a list of group IDs that should be allowed to use the command!',
+                type: 'strings',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer1',
                 title: ''
             },
