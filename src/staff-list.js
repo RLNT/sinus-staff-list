@@ -111,6 +111,86 @@ registerPlugin(
                 ]
             },
             {
+                name: 'removeCommand',
+                title:
+                    'Remove-Command > Do you want a command to remove users manually from the staff list? This can be helpful if they were offline when you removed them from a group or for similar situations.',
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'command',
+                title: 'Command > Define the command you want to use to delete a user manually!',
+                type: 'string',
+                placeholder: '!remove',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandServer',
+                title: "Server > Do you want the bot to accept the command when it's sent in the server chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandChannel',
+                title: "Channel > Do you want the bot to accept the command when it's sent in the channel chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandPrivate',
+                title: "Private > Do you want the bot to accept the command when it's sent in the private chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandClients',
+                title: 'Clients > Define a list of client IDs that should be allowed to use the command!',
+                type: 'strings',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandGroups',
+                title: 'Groups > Define a list of group IDs that should be allowed to use the command!',
+                type: 'strings',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer1',
                 title: ''
             },
@@ -345,6 +425,17 @@ registerPlugin(
             awayMute = false;
             awayDeaf = false;
         }
+        const removeCommand = varDef(config.removeCommand, 1) == 0;
+        let command, commandServer, commandChannel, commandPrivate, commandClients, commandGroups;
+        if (removeCommand) {
+            command = varDef(config.command, '!remove');
+            commandServer = varDef(config.commandServer, false);
+            commandChannel = varDef(config.commandChannel, false);
+            commandPrivate = varDef(config.commandPrivate, false);
+            commandClients = varDef(config.commandClients, []);
+            commandGroups = varDef(config.commandGroups, []);
+        }
+
         let username, userLine, groupSection, separator, phraseOnline, phraseAway, phraseOffline;
         if (template) {
             username = varDef(config.tUsername, '[B]%name%[/B]');
@@ -430,6 +521,9 @@ registerPlugin(
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
                 updateStaffList();
+                return true;
+            } else {
+                return false;
             }
         }
 
@@ -612,6 +706,14 @@ registerPlugin(
             } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
                 log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
                 return;
+            } else if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
+                log(
+                    "There are no users whitelisted for the remove command although it's enabled! Deactivating script..."
+                );
+                return;
+            } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
+                log('There is no text channel selected for the bot to listen to commands! Deactivating script...');
+                return;
             } else {
                 log('The script has loaded successfully!');
 
@@ -752,6 +854,55 @@ registerPlugin(
                         storeUser(client.uid(), client.nick(), group.id);
                     }
                     updateDescription(staffGroups, channel);
+                }
+            });
+
+            // CHAT EVENT
+            event.on('chat', event => {
+                const client = event.client;
+                if (client.isSelf()) return;
+                const message = event.text;
+                if (!message.startsWith(command)) return;
+
+                // check command permission
+                let permission = false;
+                if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
+                if (commandGroups.length > 0) {
+                    for (let group of client.getServerGroups()) {
+                        if (commandGroups.includes(group.id())) {
+                            permission = true;
+                            break;
+                        }
+                    }
+                }
+                if (!permission) {
+                    client.chat("You don't have permission to perform this command!");
+                    return;
+                }
+
+                // check chat channel
+                switch (event.mode) {
+                    case 1:
+                        // private chat
+                        if (!commandPrivate) return;
+                        break;
+                    case 2:
+                        // channel chat
+                        if (!commandChannel) return;
+                        break;
+                    case 3:
+                        // server chat
+                        if (!commandServer) return;
+                        break;
+                }
+
+                // perform the actual command
+                const uid = message.substring(command.length, message.length).trim();
+                if (removeUser(uid)) {
+                    client.chat('The user was successfully removed!');
+                    updateDescription(staffGroups, channel);
+                } else {
+                    client.chat('The user was not found in the database! Make sure to send the correct UID.');
                 }
             });
         }
