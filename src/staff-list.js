@@ -444,12 +444,8 @@ registerPlugin(
         }
 
         function getStaffGroupFromClient(client, staffGroups) {
-            log('dude: ' + client.uid());
-
             for (let staffGroup of staffGroups) {
-                log('check: ' + staffGroup.id);
                 if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
-                    log('found: ' + staffGroup.id);
                     return staffGroup;
                 }
             }
