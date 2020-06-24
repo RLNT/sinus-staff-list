@@ -856,6 +856,52 @@ registerPlugin(
                     updateDescription(staffGroups, channel);
                 }
             });
+
+            // CHAT EVENT
+            event.on('chat', event => {
+                const client = event.client;
+                if (client.isSelf()) return;
+                const message = event.text;
+                if (!message.startsWith(command)) return;
+
+                // check command permission
+                let permission = false;
+                if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
+                if (commandGroups.length > 0) {
+                    for (let group of client.getServerGroups()) {
+                        if (commandGroups.includes(group.id())) {
+                            permission = true;
+                            break;
+                        }
+                    }
+                }
+                if (!permission) return;
+
+                // check chat channel
+                switch (event.mode) {
+                    case 1:
+                        // private chat
+                        if (!commandPrivate) return;
+                        break;
+                    case 2:
+                        // channel chat
+                        if (!commandChannel) return;
+                        break;
+                    case 3:
+                        // server chat
+                        if (!commandServer) return;
+                        break;
+                }
+
+                // perform the actual command
+                const uid = message.substring(command.length, message.length).trim();
+                if (removeUser(uid)) {
+                    client.chat('The user was successfully removed!');
+                    updateDescription(staffGroups, channel);
+                } else {
+                    client.chat('The user was not found in the database! Make sure to send the correct UID.');
+                }
+            });
         }
     }
 );
