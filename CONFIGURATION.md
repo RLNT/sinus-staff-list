@@ -59,7 +59,7 @@ Please click the option you want to configure to get more information.
 
 *Details*:
 - optional option | default value: `Yes`
-- select Yes or No
+- select `Yes` or `No`
 
 *Info*:
 - defines if usernames in the list should be formatted as hyperlinks
@@ -74,7 +74,7 @@ Please click the option you want to configure to get more information.
 
 *Details*:
 - optional option | default value: `No`
-- select Yes or No
+- select `Yes` or `No`
 
 *Info*:
 - defines if the script should check for the away status of users to display it instead of online or offline
@@ -90,7 +90,7 @@ Please click the option you want to configure to get more information.
 
     *Details*:
     - optional option | default value: `No`
-    - select Yes or No
+    - select `Yes` or `No`
 
     *Info*:
     - defines whether a user is set to *away* if they enter the afk-channel
@@ -119,7 +119,7 @@ Please click the option you want to configure to get more information.
 
     *Details*:
     - optional option | default value: `No`
-    - select Yes or No
+    - select `Yes` or `No`
 
     *Info*:
     - defines if a muted user is counted as *away*
@@ -132,7 +132,7 @@ Please click the option you want to configure to get more information.
 
     *Details*:
     - optional option | default value: `No`
-    - select Yes or No
+    - select `Yes` or `No`
 
     *Info*:
     - defines if a user that set themself to deaf is counted as *away*
@@ -146,7 +146,7 @@ Please click the option you want to configure to get more information.
 
 *Details*:
 - optional option | default value: `No`
-- select Yes or No
+- select `Yes` or `No`
 
 *Info*:
 - defines if there should be a command to manually remove users from the stafflist/database
@@ -243,7 +243,7 @@ Please click the option you want to configure to get more information.
 
 *Details*:
 - optional option | default value: `No`
-- select Yes or No
+- select `Yes` or `No`
 
 *Info*:
 - this is an advanced option and will change a lot in the script so read carefully

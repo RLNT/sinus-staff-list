@@ -8,7 +8,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)][Marketplace]
 
 - [Discord]
-- [Marketplace]
+- [Sinusbot Resource Page][Marketplace]
 
 ---
 
