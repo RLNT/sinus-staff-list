@@ -10,8 +10,7 @@ registerPlugin(
     {
         name: 'Staff List',
         version: '1.5.0',
-        description:
-            'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
+        description: 'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
         backends: ['ts3'],
         vars: [
@@ -26,8 +25,7 @@ registerPlugin(
             },
             {
                 name: 'configuration',
-                title:
-                    'A guide how to configure the script to your needs can be found here: https://github.com/RLNT/sinus-staff-list/blob/master/CONFIGURATION.md'
+                title: 'A guide how to configure the script to your needs can be found here: https://github.com/RLNT/sinus-staff-list/blob/master/CONFIGURATION.md'
             },
             {
                 name: 'spacer0',
@@ -44,8 +42,7 @@ registerPlugin(
             },
             {
                 name: 'clickable',
-                title:
-                    'Clickable-Names > Do you want the usernames in the list to be clickable? They work like hyperlinks then.',
+                title: 'Clickable-Names > Do you want the usernames in the list to be clickable? They work like hyperlinks then.',
                 type: 'select',
                 options: ['Yes', 'No']
             },
@@ -210,8 +207,7 @@ registerPlugin(
             },
             {
                 name: 'tUsername',
-                title:
-                    'Username > Define what the name of a user in the list should look like! | placeholders: %name% - name of the user',
+                title: 'Username > Define what the name of a user in the list should look like! | placeholders: %name% - name of the user',
                 type: 'string',
                 placeholder: '[B]%name%[/B]',
                 indent: 1,
@@ -267,8 +263,7 @@ registerPlugin(
             },
             {
                 name: 'tMemberLine',
-                title:
-                    'User-Line > Define what a full line in the member list should look like! | placeholders: %name% - formatted username, %status% - formatted status phrase, %lb% - line break',
+                title: 'User-Line > Define what a full line in the member list should look like! | placeholders: %name% - formatted username, %status% - formatted status phrase, %lb% - line break',
                 type: 'multiline',
                 placeholder: '%name% [COLOR=#aaff00]>[/COLOR] %status%',
                 indent: 1,
@@ -281,8 +276,7 @@ registerPlugin(
             },
             {
                 name: 'tGroupSection',
-                title:
-                    'Group-Section > Define what a group section should look like! | placeholders: %group% - formatted group name, %users% - formatted member list, %lb% - line break',
+                title: 'Group-Section > Define what a group section should look like! | placeholders: %group% - formatted group name, %users% - formatted member list, %lb% - line break',
                 type: 'multiline',
                 placeholder: '[center]> %group% <\n%users%\n____________________\n[/center]%lb%',
                 indent: 1,
@@ -376,23 +370,20 @@ registerPlugin(
                     },
                     {
                         name: 'name',
-                        title:
-                            'Name > Define the name that should be shown for the group! If not set it will use the default group name.',
+                        title: 'Name > Define the name that should be shown for the group! If not set it will use the default group name.',
                         indent: 2,
                         type: 'multiline',
                         placeholder: '[COLOR=#aa007f][size=12][B]ADMIN[/B][/size][/COLOR]'
                     },
                     {
                         name: 'clients',
-                        title:
-                            'Clients > Define a list of additional client IDs that should also count towards this staff group!',
+                        title: 'Clients > Define a list of additional client IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     },
                     {
                         name: 'groups',
-                        title:
-                            'Groups > Define a list of additional group IDs that should also count towards this staff group!',
+                        title: 'Groups > Define a list of additional group IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     }
@@ -412,6 +403,7 @@ registerPlugin(
         let staffList = [];
         let groupList = [];
 
+        // CONFIG OPTIONS
         const template = varDef(config.template, 1) == 0;
         const clickable = varDef(config.clickable, 0) == 0;
         const away = varDef(config.away, 1) == 0;
@@ -560,12 +552,7 @@ registerPlugin(
         }
 
         function isAway(client) {
-            return (
-                client.isAway() ||
-                (awayMute && client.isMuted()) ||
-                (awayDeaf && client.isDeaf()) ||
-                (awayChannel && isInAfkChannel(client))
-            );
+            return client.isAway() || (awayMute && client.isMuted()) || (awayDeaf && client.isDeaf()) || (awayChannel && isInAfkChannel(client));
         }
 
         function isInAfkChannel(client) {
@@ -696,17 +683,13 @@ registerPlugin(
                 log('There was no channel selected to display the staff list! Deactivating script...');
                 return;
             } else if (awayChannel && config.afkChannels === undefined) {
-                log(
-                    'There were no afk channels set up although the afk channel option is enabled! Deactivating the script...'
-                );
+                log('There were no afk channels set up although the afk channel option is enabled! Deactivating the script...');
                 return;
             } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
                 log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
                 return;
             } else if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
-                log(
-                    "There are no users whitelisted for the remove command although it's enabled! Deactivating script..."
-                );
+                log("There are no users whitelisted for the remove command although it's enabled! Deactivating script...");
                 return;
             } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
                 log('There is no text channel selected for the bot to listen to commands! Deactivating script...');
@@ -768,11 +751,7 @@ registerPlugin(
                     }
 
                     // on afk channel join or leave
-                    if (
-                        awayChannel &&
-                        ((fromChannel !== undefined && config.afkChannels.includes(fromChannel.id())) ||
-                            (toChannel !== undefined && config.afkChannels.includes(toChannel.id())))
-                    ) {
+                    if (awayChannel && ((fromChannel !== undefined && config.afkChannels.includes(fromChannel.id())) || (toChannel !== undefined && config.afkChannels.includes(toChannel.id())))) {
                         updateDescription(staffGroups, channel);
                     }
                 } else {
