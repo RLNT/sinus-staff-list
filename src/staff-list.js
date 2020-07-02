@@ -499,7 +499,7 @@ registerPlugin(
 
         function validateDatabase() {
             store.getKeys().forEach(key => {
-                if (!groupList.includes(store.get(key)[1])) removeUser(key);
+                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup))) removeUser(key);
             });
         }
 
@@ -537,13 +537,15 @@ registerPlugin(
         }
 
         function getStaffGroupFromClient(client, staffGroups) {
+            let clientStaffGroups = [];
             for (let staffGroup of staffGroups) {
                 if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
-                    return staffGroup;
+                    clientStaffGroups.push(staffGroup.id);
                 }
             }
+            if (clientStaffGroups.length === 0) return null;
 
-            return null;
+            return clientStaffGroups;
         }
 
         function isStaffClient(client, clients) {
@@ -646,27 +648,51 @@ registerPlugin(
             let description = '';
             staffGroups.forEach(staffGroup => {
                 let staffUsersToList = '';
-                staffOnline.forEach(staffUser => {
-                    if (staffGroup.id === staffUser[2]) {
-                        const staffUserFormatted = getFormattedUsername(staffUser);
-                        const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
-                        staffUsersToList += `${staffUserToList}\n`;
-                    }
-                });
-                staffAway.forEach(staffUser => {
-                    if (staffGroup.id === staffUser[2]) {
-                        const staffUserFormatted = getFormattedUsername(staffUser);
-                        const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
-                        staffUsersToList += `${staffUserToList}\n`;
-                    }
-                });
-                staffOffline.forEach(staffUser => {
-                    if (staffGroup.id === staffUser[2]) {
-                        const staffUserFormatted = getFormattedUsername(staffUser);
-                        const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
-                        staffUsersToList += `${staffUserToList}\n`;
-                    }
-                });
+                if (duplicates) {
+                    staffOnline.forEach(staffUser => {
+                        if (staffUser[2].includes(staffGroup.id)) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffAway.forEach(staffUser => {
+                        if (staffUser[2].includes(staffGroup.id)) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffOffline.forEach(staffUser => {
+                        if (staffUser[2].includes(staffGroup.id)) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                } else {
+                    staffOnline.forEach(staffUser => {
+                        if (staffGroup.id === staffUser[2][0]) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffAway.forEach(staffUser => {
+                        if (staffGroup.id === staffUser[2][0]) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffOffline.forEach(staffUser => {
+                        if (staffGroup.id === staffUser[2][0]) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                }
 
                 if (staffUsersToList !== '') {
                     if (template) {
