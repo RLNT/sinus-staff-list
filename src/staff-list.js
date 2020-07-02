@@ -450,7 +450,6 @@ registerPlugin(
         let groupList = [];
 
         // CONFIG OPTIONS
-        const template = varDef(config.template, 1) == 0;
         const clickable = varDef(config.clickable, 0) == 0;
         const away = varDef(config.away, 1) == 0;
         let awayChannel, awayMute, awayDeaf;
@@ -474,6 +473,7 @@ registerPlugin(
             commandGroups = varDef(config.commandGroups, []);
         }
 
+        const template = varDef(config.template, 1) == 0;
         let username, userLine, groupSection, separator, phraseOnline, phraseAway, phraseOffline;
         if (template) {
             username = varDef(config.tUsername, '[B]%name%[/B]');
