@@ -344,6 +344,39 @@ registerPlugin(
                 ]
             },
             {
+                name: 'emptyGroup',
+                title: "Empty-Group-Text > Do you want to display a custom message in case no one is assigned to a staffgroup? If you choose 'No' that group wont be displayed.",
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'emptyGroupDefault',
+                title:
+                    'Empty-Group-Default > Do you want to display a default custom message for all groups or individual messages for each staffgroup? Indiviual messages will be configurable under Group Options.',
+                type: 'select',
+                options: ['Default', 'Individual'],
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'emptyGroup',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'emptyGroupMessageDefault',
+                title: 'Empty-Group-Message > Define what the default empty group message should look like! placeholders: %lb% - line break',
+                type: 'multiline',
+                placeholder: '[COLOR=#c8c8c8][B]No one currently available[/B][/COLOR]',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'emptyGroupDefault',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer2',
                 title: ''
             },
@@ -386,6 +419,19 @@ registerPlugin(
                         title: 'Groups > Define a list of additional group IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
+                    },
+                    {
+                        name: 'emptyGroupMessage',
+                        title: 'Empty-Group-Message > Define what the empty group message for this group should look like! placeholders: %lb% - line break',
+                        type: 'multiline',
+                        placeholder: '[COLOR=#c8c8c8]No one currently available[/COLOR]',
+                        indent: 1,
+                        conditions: [
+                            {
+                                field: 'emptyGroupDefault',
+                                value: 1
+                            }
+                        ]
                     }
                 ]
             }
