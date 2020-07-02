@@ -47,6 +47,12 @@ registerPlugin(
                 options: ['Yes', 'No']
             },
             {
+                name: 'duplicates',
+                title: 'Show-Multiple-Groups > Do you want clients with multiple relevant groups to be displayed in all of them?',
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
                 name: 'away',
                 title: 'Away-Status > Do you want a third status (besides online & offline) if someone is away/afk?',
                 type: 'select',
@@ -406,6 +412,7 @@ registerPlugin(
         // CONFIG OPTIONS
         const template = varDef(config.template, 1) == 0;
         const clickable = varDef(config.clickable, 0) == 0;
+        const duplicates = varDef(config.duplicates, 1) == 0;
         const away = varDef(config.away, 1) == 0;
         let awayChannel, awayMute, awayDeaf;
         if (away) {
