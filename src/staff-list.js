@@ -489,6 +489,15 @@ registerPlugin(
             phraseOffline = varDef(config.phraseOffline, '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]');
         }
 
+        const emptyGroup = varDef(config.emptyGroup, 1) == 0;
+        let emptyGroupDefault, emptyGroupMessageDefault;
+        if (emptyGroup) {
+            emptyGroupDefault = varDef(config.emptyGroupDefault, 0) == 0;
+            if (emptyGroupDefault) {
+                emptyGroupMessageDefault = varDef(config.emptyGroupMessageDefault, '[COLOR=#c8c8c8][B]No one currently available[/B][/COLOR]');
+            }
+        }
+
         // FUNCTIONS
         function log(message) {
             engine.log(prefix + ' > ' + message);
@@ -527,6 +536,13 @@ registerPlugin(
                 }
                 if (group.name === undefined || group.name === '') {
                     group.name = '[size=12][B]' + backend.getServerGroupByID(group.id).name() + '[/B][/size]';
+                }
+                if (emptyGroup) {
+                    if (!emptyGroupDefault) {
+                        if (group.emptyGroupMessage === undefined || group.emptyGroupMessage === '') {
+                            group.emptyGroupMessage = '[size=12]No one currently available[/size]';
+                        }
+                    }
                 }
 
                 groupList = groupList.concat(group.groups);
@@ -708,6 +724,15 @@ registerPlugin(
                 });
 
                 if (staffUsersToList !== '') {
+                    if (!emptyGroup) return;
+                    if (emptyGroupDefault) {
+                        description += `${staffGroup.name}\n`;
+                        description += emptyGroupMessageDefault.replace('%lb%', '\n');
+                    } else {
+                        description += `${staffGroup.name}\n`;
+                        description += staffGroup.emptyGroupMessage.replace('%lb%', '\n');
+                    }
+                } else {
                     if (template) {
                         description += groupSection
                             .replace('%group%', staffGroup.name)
