@@ -47,6 +47,12 @@ registerPlugin(
                 options: ['Yes', 'No']
             },
             {
+                name: 'multiple',
+                title: 'Show-Multiple-Groups > Do you want clients with multiple relevant groups to be displayed in all of them?',
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
                 name: 'away',
                 title: 'Away-Status > Do you want a third status (besides online & offline) if someone is away/afk?',
                 type: 'select',
@@ -406,6 +412,7 @@ registerPlugin(
         // CONFIG OPTIONS
         const template = varDef(config.template, 1) == 0;
         const clickable = varDef(config.clickable, 0) == 0;
+        const multiple = varDef(config.multiple, 1) == 0;
         const away = varDef(config.away, 1) == 0;
         let awayChannel, awayMute, awayDeaf;
         if (away) {
@@ -476,7 +483,7 @@ registerPlugin(
                 if (group.groups === undefined || group.groups.length === 0) {
                     group.groups = [group.id];
                 } else {
-                    group.groups.map(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
+                    group.groups.filter(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
                     group.groups.push(group.id);
                 }
                 if (group.name === undefined || group.name === '') {
@@ -492,19 +499,26 @@ registerPlugin(
 
         function validateDatabase() {
             store.getKeys().forEach(key => {
-                if (!groupList.includes(store.get(key)[1])) removeUser(key);
+                // delete entries from database which do not contain group objects
+                if (Array.isArray(store.get(key)[1])) {
+                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) removeUser(key);
+                } else {
+                    if (typeof store.get(key)[1] !== 'object') removeUser(key);
+                }
+                // remove all users from database who do not have a required group
+                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeUser(key);
             });
         }
 
-        function storeUser(uid, nick, group) {
+        function storeUser(uid, nick, groups) {
             if (!store.getKeys().includes(uid)) {
-                store.set(uid, [nick, group]);
+                store.set(uid, [nick, groups]);
             } else if (store.get(uid)[0] !== nick) {
                 store.unset(uid);
-                store.set(uid, [nick, group]);
-            } else if (store.get(uid)[1] !== group) {
+                store.set(uid, [nick, groups]);
+            } else if (store.get(uid)[1] !== groups) {
                 store.unset(uid);
-                store.set(uid, [nick, group]);
+                store.set(uid, [nick, groups]);
             }
             updateStaffList();
         }
@@ -529,14 +543,16 @@ registerPlugin(
             staffList = list;
         }
 
-        function getStaffGroupFromClient(client, staffGroups) {
+        function getStaffGroupsFromClient(client, staffGroups) {
+            let clientStaffGroups = [];
             for (let staffGroup of staffGroups) {
                 if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
-                    return staffGroup;
+                    clientStaffGroups.push(staffGroup);
                 }
             }
+            if (clientStaffGroups.length === 0) return null;
 
-            return null;
+            return clientStaffGroups;
         }
 
         function isStaffClient(client, clients) {
@@ -639,27 +655,51 @@ registerPlugin(
             let description = '';
             staffGroups.forEach(staffGroup => {
                 let staffUsersToList = '';
-                staffOnline.forEach(staffUser => {
-                    if (staffGroup.id === staffUser[2]) {
-                        const staffUserFormatted = getFormattedUsername(staffUser);
-                        const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
-                        staffUsersToList += `${staffUserToList}\n`;
-                    }
-                });
-                staffAway.forEach(staffUser => {
-                    if (staffGroup.id === staffUser[2]) {
-                        const staffUserFormatted = getFormattedUsername(staffUser);
-                        const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
-                        staffUsersToList += `${staffUserToList}\n`;
-                    }
-                });
-                staffOffline.forEach(staffUser => {
-                    if (staffGroup.id === staffUser[2]) {
-                        const staffUserFormatted = getFormattedUsername(staffUser);
-                        const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
-                        staffUsersToList += `${staffUserToList}\n`;
-                    }
-                });
+                if (multiple) {
+                    staffOnline.forEach(staffUser => {
+                        if (staffUser[2].some(group => group.id === staffGroup.id)) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffAway.forEach(staffUser => {
+                        if (staffUser[2].some(group => group.id === staffGroup.id)) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffOffline.forEach(staffUser => {
+                        if (staffUser[2].some(group => group.id === staffGroup.id)) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                } else {
+                    staffOnline.forEach(staffUser => {
+                        if (staffGroup.id === staffUser[2][0].id) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffAway.forEach(staffUser => {
+                        if (staffGroup.id === staffUser[2][0].id) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                    staffOffline.forEach(staffUser => {
+                        if (staffGroup.id === staffUser[2][0].id) {
+                            const staffUserFormatted = getFormattedUsername(staffUser);
+                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
+                            staffUsersToList += `${staffUserToList}\n`;
+                        }
+                    });
+                }
 
                 if (staffUsersToList !== '') {
                     if (template) {
@@ -715,9 +755,9 @@ registerPlugin(
 
             // store all online listed staff users
             backend.getClients().forEach(client => {
-                const staffGroup = getStaffGroupFromClient(client, staffGroups);
-                if (staffGroup !== null) {
-                    storeUser(client.uid(), client.nick(), staffGroup.id);
+                const clientStaffGroups = getStaffGroupsFromClient(client, staffGroups);
+                if (clientStaffGroups !== null) {
+                    storeUser(client.uid(), client.nick(), clientStaffGroups);
                 } else {
                     removeUser(client.uid());
                 }
@@ -737,14 +777,14 @@ registerPlugin(
                 const toChannel = event.toChannel;
                 const uid = client.uid();
                 const nick = client.nick();
-                const group = getStaffGroupFromClient(client, staffGroups);
+                const groups = getStaffGroupsFromClient(client, staffGroups);
 
                 // make sure it's a user that has to be listed
-                if (group !== null) {
+                if (groups !== null) {
                     // on connect or disconnect
                     if (fromChannel === undefined || toChannel === undefined) {
                         // make sure user is stored
-                        storeUser(uid, nick, group.id);
+                        storeUser(uid, nick, groups);
 
                         // update the description
                         updateDescription(staffGroups, channel);
@@ -765,14 +805,14 @@ registerPlugin(
             event.on('clientAway', client => {
                 if (!away) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
             });
 
             // UN-AFK EVENT
             event.on('clientBack', client => {
                 if (!away) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
             });
 
             // MUTE EVENT
@@ -780,7 +820,7 @@ registerPlugin(
                 if (!away) return;
                 if (!awayMute) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
             });
 
             // UNMUTE EVENT
@@ -788,7 +828,7 @@ registerPlugin(
                 if (!away) return;
                 if (!awayMute) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
             });
 
             // DEAF EVENT
@@ -796,7 +836,7 @@ registerPlugin(
                 if (!away) return;
                 if (!awayDeaf) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
             });
 
             // UNDEAF EVENT
@@ -804,7 +844,7 @@ registerPlugin(
                 if (!away) return;
                 if (!awayDeaf) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups) !== null) updateDescription(staffGroups, channel);
             });
 
             // SERVER GROUP ADDED EVENT
@@ -812,7 +852,7 @@ registerPlugin(
                 const client = event.client;
                 if (client.isSelf()) return;
                 if (groupList.includes(event.serverGroup.id())) {
-                    storeUser(client.uid(), client.nick(), getStaffGroupFromClient(client, staffGroups).id);
+                    storeUser(client.uid(), client.nick(), getStaffGroupsFromClient(client, staffGroups));
                     updateDescription(staffGroups, channel);
                 }
             });
@@ -822,12 +862,12 @@ registerPlugin(
                 const client = event.client;
                 if (client.isSelf()) return;
                 if (groupList.includes(event.serverGroup.id())) {
-                    const group = getStaffGroupFromClient(client, staffGroups);
+                    const groups = getStaffGroupsFromClient(client, staffGroups);
 
-                    if (group === null) {
+                    if (groups === null) {
                         removeUser(client.uid());
                     } else {
-                        storeUser(client.uid(), client.nick(), group.id);
+                        storeUser(client.uid(), client.nick(), groups);
                     }
                     updateDescription(staffGroups, channel);
                 }
