@@ -473,11 +473,17 @@ registerPlugin(
             engine.log('Staff-List > ' + message);
         }
 
-        function varDef(v, defVal) {
-            if (v === undefined || v === null || v === '') {
-                return defVal;
+        /**
+         * Set a default value to a variable in case it's not defined in the config
+         * @param {*} configVal > the config variable
+         * @param {*} defaultVal > the default value that should be applied if no config value was found or it's empty
+         * @returns {*} > the actual result of the variable
+         */
+        function varDef(configVal, defaultVal) {
+            if (configVal === undefined || configVal === null || configVal === '') {
+                return defaultVal;
             } else {
-                return v;
+                return configVal;
             }
         }
 
