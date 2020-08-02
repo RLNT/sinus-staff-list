@@ -458,6 +458,38 @@ Next up, you should open the section depending on the option you chose for the t
     </details>
 </details>
 
+There is one last option for text and format that is not related to the template option.
+
+<details>
+    <summary>
+        Empty-Groups
+    </summary>
+
+*Details*:
+- optional option | default value: `No`
+- select `Yes` or `No`
+
+*Info*:
+- defines whether an empty group is still shown in the list
+- a group is considered empty if no client is assigned or stored to it
+
+*Advanced Options*:
+- the following option is only shown if you selected `Yes` for the *Empty-Groups*
+
+    <details>
+        <summary>
+            Empty-Groups-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `[COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]`
+    - enter the text that should be displayed if the group is considered empty
+
+    *Info*:
+    - this is written below the name of the group
+    </details>
+</details>
+
 
 ## **Group Options**
 The last section is all about the staff groups. You can set individual settings for each group here. These are the groups that are displayed in the staff list.

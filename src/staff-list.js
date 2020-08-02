@@ -351,7 +351,7 @@ registerPlugin(
             },
             {
                 name: 'emptyGroupText',
-                title: 'Empty-Group-Text > Define what the text of an empty group should look like! | placeholders: %lb% - line break',
+                title: 'Empty-Groups-Text > Define what the text of an empty group should look like! | placeholders: %lb% - line break',
                 type: 'multiline',
                 placeholder: '[COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]',
                 indent: 2,
