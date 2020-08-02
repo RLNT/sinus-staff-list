@@ -60,7 +60,7 @@ registerPlugin(
             },
             {
                 name: 'awayChannel',
-                title: 'Away-Channel > Do you want to set someone away/afk if they join any afk channel?',
+                title: 'Away-Channels > Do you want to set someone away/afk if they join any afk channel?',
                 type: 'select',
                 options: ['Yes', 'No'],
                 indent: 1,
