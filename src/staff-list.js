@@ -487,14 +487,21 @@ registerPlugin(
             }
         }
 
-        function waitForBackend() {
-            return new Promise(done => {
+        function waitForBackend(attempts, wait) {
+            return new Promise((success, fail) => {
+                let attempt = 0;
                 const timer = setInterval(() => {
                     if (backend.isConnected()) {
                         clearInterval(timer);
-                        done();
+                        success();
                     }
-                }, 1000);
+                    if (attempt === attempts) {
+                        clearInterval(timer);
+                        fail();
+                    }
+
+                    attempts++;
+                }, wait * 1000);
             });
         }
 
@@ -766,9 +773,13 @@ registerPlugin(
                 log('The script has loaded successfully!');
 
                 // start the script
-                waitForBackend().then(() => {
-                    main();
-                });
+                waitForBackend()
+                    .then(() => {
+                        main();
+                    })
+                    .catch(() => {
+                        log("The script couldn't be loaded because the backend was not online in time! Deactivating script...");
+                    });
             }
         });
 
