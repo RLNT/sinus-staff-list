@@ -422,7 +422,7 @@ registerPlugin(
         const store = require('store');
 
         // GLOBAL VARS
-        let staffList = [];
+        let staffUsers = [];
         let groupList = [];
 
         // CONFIG OPTIONS
@@ -538,27 +538,27 @@ registerPlugin(
                 store.unset(uid);
                 store.set(uid, [nick, groups]);
             }
-            updateStaffList();
+            updateStaffUsers();
         }
 
         function removeUser(uid) {
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
-                updateStaffList();
+                updateStaffUsers();
                 return true;
             } else {
                 return false;
             }
         }
 
-        function updateStaffList() {
+        function updateStaffUsers() {
             let list = [];
             const keys = store.getKeys();
             keys.forEach(key => {
                 list.push([key, store.get(key)[0], store.get(key)[1]]);
             });
 
-            staffList = list;
+            staffUsers = list;
         }
 
         function getStaffGroupsFromClient(client, staffGroups) {
@@ -606,7 +606,6 @@ registerPlugin(
         }
 
         function getFormattedUserLine(name, status) {
-            // 0 = online, 1 = away, 2 = offline
             let formattedName = '';
             if (template) {
                 formattedName = userLine.replace('%name%', username.replace('%name%', name)).replace('%lb%', '\n');
@@ -614,6 +613,7 @@ registerPlugin(
                 formattedName = `${name} - %status%`;
             }
 
+            // 0 = online, 1 = away, 2 = offline
             switch (status) {
                 case 0:
                     formattedName = formattedName.replace('%status%', phraseOnline);
@@ -633,7 +633,7 @@ registerPlugin(
             let staffOnline = [];
             let staffAway = [];
             let staffOffline = [];
-            staffList.forEach(staffUser => {
+            staffUsers.forEach(staffUser => {
                 const client = backend.getClientByUID(staffUser[0]);
                 if (client !== undefined) {
                     if (away) {
@@ -786,7 +786,7 @@ registerPlugin(
             });
 
             // update the cached member list
-            updateStaffList();
+            updateStaffUsers();
 
             // update the description for all currently known staff users
             updateDescription(staffGroups, channel);
