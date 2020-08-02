@@ -90,8 +90,7 @@ registerPlugin(
             {
                 name: 'awayMute',
                 title: 'Away-Mute > Do you want to count muted clients as away/afk?',
-                type: 'select',
-                options: ['Yes', 'No'],
+                type: 'checkbox',
                 indent: 1,
                 conditions: [
                     {
@@ -103,8 +102,7 @@ registerPlugin(
             {
                 name: 'awayDeaf',
                 title: 'Away-Deaf > Do you want to count deaf clients as away/afk?',
-                type: 'select',
-                options: ['Yes', 'No'],
+                type: 'checkbox',
                 indent: 1,
                 conditions: [
                     {
@@ -435,8 +433,8 @@ registerPlugin(
         let awayChannel, awayMute, awayDeaf;
         if (away) {
             awayChannel = varDef(config.awayChannel, 1) == 0;
-            awayMute = varDef(config.awayMute, 1) == 0;
-            awayDeaf = varDef(config.awayDeaf, 1) == 0;
+            awayMute = varDef(config.awayMute, false);
+            awayDeaf = varDef(config.awayDeaf, false);
         } else {
             awayChannel = false;
             awayMute = false;
