@@ -47,7 +47,7 @@ registerPlugin(
                 options: ['Yes', 'No']
             },
             {
-                name: 'duplicates',
+                name: 'multiple',
                 title: 'Show-Multiple-Groups > Do you want clients with multiple relevant groups to be displayed in all of them?',
                 type: 'select',
                 options: ['Yes', 'No']
@@ -412,7 +412,7 @@ registerPlugin(
         // CONFIG OPTIONS
         const template = varDef(config.template, 1) == 0;
         const clickable = varDef(config.clickable, 0) == 0;
-        const duplicates = varDef(config.duplicates, 1) == 0;
+        const multiple = varDef(config.multiple, 1) == 0;
         const away = varDef(config.away, 1) == 0;
         let awayChannel, awayMute, awayDeaf;
         if (away) {
@@ -655,7 +655,7 @@ registerPlugin(
             let description = '';
             staffGroups.forEach(staffGroup => {
                 let staffUsersToList = '';
-                if (duplicates) {
+                if (multiple) {
                     staffOnline.forEach(staffUser => {
                         if (staffUser[2].some(group => group.id === staffGroup.id)) {
                             const staffUserFormatted = getFormattedUsername(staffUser);
