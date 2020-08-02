@@ -350,6 +350,25 @@ registerPlugin(
                 ]
             },
             {
+                name: 'emptyGroup',
+                title: 'Empty-Groups > Do you want to display a custom text for a group in case no one is assigned/stored to it?',
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'emptyGroupText',
+                title: 'Empty-Groups-Text > Define what the text of an empty group should look like! | placeholders: %lb% - line break',
+                type: 'multiline',
+                placeholder: '[COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]',
+                indent: 2,
+                conditions: [
+                    {
+                        field: 'emptyGroup',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer2',
                 title: ''
             },
@@ -410,7 +429,6 @@ registerPlugin(
         let groupList = [];
 
         // CONFIG OPTIONS
-        const template = varDef(config.template, 1) == 0;
         const clickable = varDef(config.clickable, 0) == 0;
         const multiple = varDef(config.multiple, 1) == 0;
         const away = varDef(config.away, 1) == 0;
@@ -434,7 +452,7 @@ registerPlugin(
             commandClients = varDef(config.commandClients, []);
             commandGroups = varDef(config.commandGroups, []);
         }
-
+        const template = varDef(config.template, 1) == 0;
         let username, userLine, groupSection, separator, phraseOnline, phraseAway, phraseOffline;
         if (template) {
             username = varDef(config.tUsername, '[B]%name%[/B]');
@@ -449,6 +467,9 @@ registerPlugin(
             phraseAway = varDef(config.phraseAway, '[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]');
             phraseOffline = varDef(config.phraseOffline, '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]');
         }
+        const emptyGroup = varDef(config.emptyGroup, 1) == 0;
+        let emptyGroupText;
+        if (emptyGroup) emptyGroupText = varDef(config.emptyGroupText, '[COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]');
 
         // FUNCTIONS
         function log(message) {
@@ -701,7 +722,11 @@ registerPlugin(
                     });
                 }
 
-                if (staffUsersToList !== '') {
+                if (staffUsersToList === '') {
+                    if (!emptyGroup) return;
+                    description += `${staffGroup.name}\n`;
+                    description += emptyGroupText.replace('%lb%', '\n');
+                } else {
                     if (template) {
                         description += groupSection
                             .replace('%group%', staffGroup.name)
