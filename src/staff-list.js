@@ -796,8 +796,9 @@ registerPlugin(
                     }
                 } else {
                     // if user has no list group but is in the database, delete them
-                    removeUser(uid);
-                    updateDescription(staffGroups, channel);
+                    if (removeUser(uid)) {
+                        updateDescription(staffGroups, channel);
+                    }
                 }
             });
 
