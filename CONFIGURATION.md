@@ -63,7 +63,7 @@ Please click the option you want to configure to get more information.
 *Info*:
 - defines if usernames in the list should be formatted as hyperlinks
 - hyperlink usernames can be used to edit groups, send messages and other actions right from the list
-- uses the same menu as when you rightclick a user in TeamSpeak by yourself
+- uses the same menu as when you rightclick a client in TeamSpeak by yourself
 - if you choose no, it will just use plain text
 </details>
 <details>
@@ -89,7 +89,7 @@ Please click the option you want to configure to get more information.
 - select `Yes` or `No`
 
 *Info*:
-- defines if the script should check for the away status of users to display it instead of online or offline
+- defines if the script should check for the away status of clients to display it instead of online or offline
 - you can configure what counts as *away* later and also format how it looks like
 
 *Advanced Options*:
@@ -105,7 +105,7 @@ Please click the option you want to configure to get more information.
     - select `Yes` or `No`
 
     *Info*:
-    - defines whether a user is set to *away* if they enter the afk-channel
+    - defines whether a client is set to *away* if they enter the afk-channel
 
     *Advanced Options*:
     - the following option is only shown if you activated the away channel
@@ -120,8 +120,8 @@ Please click the option you want to configure to get more information.
         - enter the channel ids
 
         *Info*:
-        - defines the afk-channels in the TeamSpeak where users that are *away* normally go
-        - if a user joins one of the channels, they will be set to *away* in the list
+        - defines the afk channels on the TeamSpeak where clients that are *away* usually go
+        - if a client joins one of the channels, they will be set to *away* in the list
         </details>
     </details>
     <details>
@@ -134,7 +134,7 @@ Please click the option you want to configure to get more information.
     - select `Yes` or `No`
 
     *Info*:
-    - defines if a muted user is counted as *away*
+    - defines if a muted client is counted as *away*
     - deactivated microphone does not count to this
     </details>
     <details>
@@ -147,7 +147,7 @@ Please click the option you want to configure to get more information.
     - select `Yes` or `No`
 
     *Info*:
-    - defines if a user that set themself to deaf is counted as *away*
+    - defines if a client that set themself to deaf is counted as *away*
     - deactivated speakers do not count to this
     </details>
 </details>
@@ -161,8 +161,8 @@ Please click the option you want to configure to get more information.
 - select `Yes` or `No`
 
 *Info*:
-- defines if there should be a command to manually remove users from the stafflist/database
-- this can be used to manually remove a user from the database if you removed a group while they were offline for example
+- defines if there should be a command to manually remove clients from the stafflist/database
+- this can be used to manually remove a client from the database if you removed a group while they were offline for example
 
 *Advanced Options*:
 - the following options are only shown if you activated the remove command
@@ -226,7 +226,7 @@ Please click the option you want to configure to get more information.
     - enter a list of client uids
 
     *Info*:
-    - defines if a user has the permission to use the remove command
+    - defines if a client has the permission to use the remove command
     </details>
     <details>
         <summary>
@@ -310,7 +310,7 @@ Next up, you should open the section depending on the option you chose for the t
     - optional option | default value: `[B]%name%[/B]`
     - enter the format a username should have in the list
     - available placeholders:
-      - %name% - the name of the user
+      - %name% - the name of the client
 
     *Info*:
     - defines the format of a username and how it's shown in the staff list
@@ -325,10 +325,10 @@ Next up, you should open the section depending on the option you chose for the t
 
     *Details*:
     - optional option | default value: `[COLOR=#00ff00][B]ONLINE[/B][/COLOR]`
-    - enter the phrase of the status if the user is online
+    - enter the phrase of the status if the client is online
 
     *Info*:
-    - defines the format of the status phrase if the user is online
+    - defines the format of the status phrase if the client is online
     - this is only a part of the whole line
     - if you want to edit the whole line, you have to configure the *User-Line* option
     </details>
@@ -339,11 +339,11 @@ Next up, you should open the section depending on the option you chose for the t
 
     *Details*:
     - optional option | default value: `[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]`
-    - enter the phrase of the status if the user is away/afk
+    - enter the phrase of the status if the client is away/afk
     - this option is only shown if you selected *Yes* for the away status
 
     *Info*:
-    - defines the format of the status phrase if the user is away/afk
+    - defines the format of the status phrase if the client is away/afk
     - this is only a part of the whole line
     - if you want to edit the whole line, you have to configure the *User-Line* option
     </details>
@@ -354,10 +354,10 @@ Next up, you should open the section depending on the option you chose for the t
 
     *Details*:
     - optional option | default value: `[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]`
-    - enter the phrase of the status if the user is offline
+    - enter the phrase of the status if the client is offline
 
     *Info*:
-    - defines the format of the status phrase if the user is offline
+    - defines the format of the status phrase if the client is offline
     - this is only a part of the whole line
     - if you want to edit the whole line, you have to configure the *User-Line* option
     </details>
@@ -378,7 +378,7 @@ Next up, you should open the section depending on the option you chose for the t
     - defines the format of a user line and how it's shown in the staff list
     - this uses the earlier defined phrases as placeholders so it doesn't matter if you formatted them earlier or here but it is recommended to only format once to avoid interference
     - this option can be used to align the line or for other options that are then applied to the whole line
-    - keep in mind that there is always a line break at each end of the user lines to have the next user in the next line
+    - keep in mind that there is always a line break at each end of the user lines to have the next client in the next line
     </details>
     <details>
         <summary>
@@ -435,10 +435,10 @@ Next up, you should open the section depending on the option you chose for the t
 
     *Details*:
     - optional option | default value: `[COLOR=#00ff00][B]ONLINE[/B][/COLOR]`
-    - enter the phrase of the status if the user is online
+    - enter the phrase of the status if the client is online
 
     *Info*:
-    - defines the format of the status phrase if the user is online
+    - defines the format of the status phrase if the client is online
     - this is attached after the username and a dash to separate the name from the status
     </details>
     <details>
@@ -448,11 +448,11 @@ Next up, you should open the section depending on the option you chose for the t
 
     *Details*:
     - optional option | default value: `[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]`
-    - enter the phrase of the status if the user is away/afk
+    - enter the phrase of the status if the client is away/afk
     - this option is only shown if you selected *Yes* for the away status
 
     *Info*:
-    - defines the format of the status phrase if the user is away/afk
+    - defines the format of the status phrase if the client is away/afk
     - this is attached after the username and a dash to separate the name from the status
     </details>
     <details>
@@ -462,10 +462,10 @@ Next up, you should open the section depending on the option you chose for the t
 
     *Details*:
     - optional option | default value: `[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]`
-    - enter the phrase of the status if the user is offline
+    - enter the phrase of the status if the client is offline
 
     *Info*:
-    - defines the format of the status phrase if the user is offline
+    - defines the format of the status phrase if the client is offline
     - this is attached after the username and a dash to separate the name from the status
     </details>
 </details>
