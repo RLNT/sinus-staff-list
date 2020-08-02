@@ -422,7 +422,6 @@ registerPlugin(
         const store = require('store');
 
         // GLOBAL VARS
-        const prefix = 'Staff-List';
         let staffList = [];
         let groupList = [];
 
@@ -471,7 +470,7 @@ registerPlugin(
 
         // FUNCTIONS
         function log(message) {
-            engine.log(prefix + ' > ' + message);
+            engine.log('Staff-List > ' + message);
         }
 
         function varDef(v, defVal) {
