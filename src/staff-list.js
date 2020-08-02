@@ -511,6 +511,10 @@ registerPlugin(
             });
         }
 
+        /**
+         * Check all staff groups from the config if their entries are valid and if all IDs reference valid objects on TeamSpeak; drop them if non-valid
+         * @returns {Array} > a list of all valid staff groups objects
+         */
         function validateStaffGroups() {
             let staffGroups = [];
 
