@@ -499,7 +499,14 @@ registerPlugin(
 
         function validateDatabase() {
             store.getKeys().forEach(key => {
-                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup))) removeUser(key);
+                // delete entries from database which do not contain group objects
+                if (Array.isArray(store.get(key)[1])) {
+                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) removeUser(key);
+                } else {
+                    if (typeof store.get(key)[1] !== 'object') removeUser(key);
+                }
+                // remove all users from database who do not have a required group
+                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeUser(key);
             });
         }
 
