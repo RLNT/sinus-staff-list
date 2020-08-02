@@ -23,13 +23,12 @@
 ## **How does the script operate?**
 A good start to configure a script is to understand its functionality. Here are a few small points which are important if you want to set everything up correctly.
 
-1. The script checks all users it has to list and their online status right when the script starts to build an initial list that is displayed in the selected channel. After that, different events trigger a new check. Such events are for example: a client joins/leaves, a client switches rooms, a client sets themself to mute/deaf/away.
-2. Since there is no way of retrieving usernames from offline users, the script stores each user it has to list in a storage so their name and information is also available if the user is not online. This means that a user you want to list has to be online at least once while the bot is running with the script. Important to know is that users are only stored if they are a part of the potential list so you have to add them to any staff group.
-3. Groups that are set up but don't have any users stored by script are skipped and won't be displayed so there is no empty group section in the staff list.
-4. Users of a staff group are sorted by their status (online, away, offline) and alphabetically.
-5. The script detects a lot of misconfiguration and provides standard values. Just make sure to fill out each field marked with (*).
-6. If there is a severe error that affects the script's functionality, it will be written in the log and the script won't be executed.
-7. Last but most important thing: the staff groups you list in the configuration are prioritized from top to bottom. A user can only be listed in one group in the staff list. If a user is a member of two groups and both are added to the list, they will only show up in the group which is the highest in the config.
+1. The script checks all clients it has to list and their online status right when the script starts to build an initial list that is displayed in the selected channel. After that, different events trigger a new check. To mention some events: a client joins/leaves, a client switches rooms, a client sets themself to mute/deaf/away.
+2. Since there is no way of retrieving usernames from offline clients, the script stores each client it has to list in a storage so their name and information is also available if the client is not online. This means that a client you want to list has to be online at least once while the bot is running with the script while the client has a relevant staff group.
+3. Groups that are set up but don't have any clients stored by script are skipped and won't be displayed so there is no empty group section in the staff list.
+4. Clients that are listed within a staff group are sorted by their status (online, away, offline) and alphabetically.
+5. The script detects a lot of misconfiguration and provides standard values. Just make sure to fill out each field marked with (*). If there is a severe error that affects the script's functionality, it will be written in the log and the script won't be executed.
+6. Last but most important thing: the staff groups you define in the configuration are prioritized from top to bottom. There is a config option to choose if a client should be displayed in the staff group with the highest priority only or in all of the relevant groups.
 
 
 ## **General Options**
@@ -66,6 +65,19 @@ Please click the option you want to configure to get more information.
 - hyperlink usernames can be used to edit groups, send messages and other actions right from the list
 - uses the same menu as when you rightclick a user in TeamSpeak by yourself
 - if you choose no, it will just use plain text
+</details>
+<details>
+    <summary>
+        Show-Multiple-Groups
+    </summary>
+
+*Details*:
+- optional option | default value: `No`
+- select `Yes` or `No`
+
+*Info*:
+- defines if clients with multiple relevant staff groups should be displayed in all of them
+- if you choose no, the client will only be shown in the group with the highest priority from the config (the one that comes first)<>
 </details>
 <details>
     <summary>
