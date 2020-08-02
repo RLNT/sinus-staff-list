@@ -483,7 +483,7 @@ registerPlugin(
                 if (group.groups === undefined || group.groups.length === 0) {
                     group.groups = [group.id];
                 } else {
-                    group.groups.map(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
+                    group.groups.filter(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
                     group.groups.push(group.id);
                 }
                 if (group.name === undefined || group.name === '') {
