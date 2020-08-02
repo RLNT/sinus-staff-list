@@ -487,6 +487,12 @@ registerPlugin(
             }
         }
 
+        /**
+         * Wait for the backend to be online/connected each given amount of time for a given amount of tries
+         * @param {Number} attempts > the amount of tries the function should check for the backend to be online/connected
+         * @param {Number} wait > the amount of time (in seconds) that should be waited between each try
+         * @returns {Promise} > resolve when the backend is online/connected, reject when the backend was not online/connected in time
+         */
         function waitForBackend(attempts, wait) {
             return new Promise((success, fail) => {
                 let attempt = 0;
