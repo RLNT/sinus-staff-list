@@ -710,6 +710,10 @@ registerPlugin(
             return formattedLine;
         }
 
+        /**
+         * Sort all staff clients by their online status and alphabetically
+         * @returns {Array} > The list with all sorted staff clients [online, away, offline]
+         */
         function getSortedStaffList() {
             let staffOnline = [];
             let staffAway = [];
