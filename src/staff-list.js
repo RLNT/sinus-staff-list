@@ -422,8 +422,8 @@ registerPlugin(
         const store = require('store');
 
         // GLOBAL VARS
-        let staffClients = [];
-        let groupList = [];
+        let staffClients = []; // [uid, nickname, [staff groups]]
+        let groupList = []; // list of all relevant group IDs
 
         // CONFIG OPTIONS
         const clickable = varDef(config.clickable, 0) == 0;
@@ -601,7 +601,8 @@ registerPlugin(
 
         /**
          * Update the global list of staff clients with an easier to access format;
-         * Accessing a variable is also faster than reading everything from the script storage
+         * Accessing a variable is also faster than reading everything from the script storage;
+         * List format: [uid, nickname, [staff groups]]
          * @returns {void} > nothing
          */
         function updateStaffClients() {
@@ -632,7 +633,7 @@ registerPlugin(
          * Check if a client is a valid member of a given staff group from the config
          * @param {Object} client > The client object to check
          * @param {Object} staffGroup > The staff group object from the config to check
-         * @returns > True if the client is a valid member, otherwise False
+         * @returns {Boolean} > True if the client is a valid member, otherwise False
          */
         function isStaffGroupMember(client, staffGroup) {
             if (staffGroup.clients.includes(client.uid())) return true;
@@ -647,7 +648,7 @@ registerPlugin(
         /**
          * Check if a client is counted as away/afk by checking different status of them
          * @param {Object} client > The client object to check
-         * @returns > True if the client is counted as away/afk, otherwise False
+         * @returns {Boolean} > True if the client is counted as away/afk, otherwise False
          */
         function isAway(client) {
             return client.isAway() || (awayMute && client.isMuted()) || (awayDeaf && client.isDeaf()) || (awayChannel && isInAfkChannel(client));
@@ -656,7 +657,7 @@ registerPlugin(
         /**
          * Check if a client is in any afk channel which is given in the config
          * @param {Object} client > The client object to check
-         * @returns > True if the client is in any afk channel, otherwise False
+         * @returns {Boolean} > True if the client is in any afk channel, otherwise False
          */
         function isInAfkChannel(client) {
             for (let channel of client.getChannels()) {
@@ -666,6 +667,11 @@ registerPlugin(
             return false;
         }
 
+        /**
+         * Format a username if the script is configured to make them clickable
+         * @param {Array} staffClient > The staff client array [uid, nickname, [staff groups]]
+         * @returns {String} > The formatted username
+         */
         function getFormattedUsername(staffClient) {
             if (clickable) {
                 return `[URL=client://0/${staffClient[0]}]${staffClient[1]}[/URL]`;
