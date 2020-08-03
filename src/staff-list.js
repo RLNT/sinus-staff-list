@@ -753,6 +753,12 @@ registerPlugin(
             return [staffOnline, staffAway, staffOffline];
         }
 
+        /**
+         * Update the channel description where the staff list should be shown in
+         * @param {Array} staffGroups > The list of validated staff groups from the config
+         * @param {Object} channel > The channel object to display the staff list in
+         * @returns {void} > nothing
+         */
         function updateDescription(staffGroups, channel) {
             const [staffOnline, staffAway, staffOffline] = getSortedStaffList();
             let description = '';
