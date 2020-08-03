@@ -538,6 +538,12 @@ registerPlugin(
             return staffGroups;
         }
 
+        /**
+         * Validate the script database by checking all entries if they still have a relevant
+         * group to list and if they match the current database format; otherwise drop them;
+         * database format: <key - uid | entry - nickname, [staff groups]>
+         * @returns {void} > nothing
+         */
         function validateDatabase() {
             store.getKeys().forEach(key => {
                 // delete entries from database which do not contain group objects
