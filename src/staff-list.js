@@ -599,6 +599,11 @@ registerPlugin(
             }
         }
 
+        /**
+         * Update the global list of staff clients with an easier to access format;
+         * Accessing a variable is also faster than reading everything from the script storage
+         * @returns {void} > nothing
+         */
         function updateStaffClients() {
             let list = [];
             const keys = store.getKeys();
