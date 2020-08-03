@@ -644,6 +644,11 @@ registerPlugin(
             return false;
         }
 
+        /**
+         * Check if a client is counted as away/afk by checking different status of them
+         * @param {Object} client > The client object to check
+         * @returns > True if the client is counted as away/afk, otherwise False
+         */
         function isAway(client) {
             return client.isAway() || (awayMute && client.isMuted()) || (awayDeaf && client.isDeaf()) || (awayChannel && isInAfkChannel(client));
         }
