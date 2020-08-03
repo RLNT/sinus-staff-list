@@ -512,7 +512,9 @@ registerPlugin(
         }
 
         /**
-         * Check all staff groups from the config if their entries are valid and if all IDs reference valid objects on TeamSpeak; drop them if non-valid
+         * Check all staff groups from the config if their entries are valid and if all IDs
+         * reference valid objects on TeamSpeak;
+         * Otherwise drop the whole config entry for the runtime
          * @returns {Array} > a list of all valid staff groups objects
          */
         function validateStaffGroups() {
@@ -540,8 +542,9 @@ registerPlugin(
 
         /**
          * Validate the script database by checking all entries if they still have a relevant
-         * group to list and if they match the current database format; otherwise drop them;
-         * database format: <key - uid | entry - nickname, [staff groups]>
+         * group to list and if they match the current database format;
+         * Otherwise drop the whole entry;
+         * Database format: <key - uid | entry - nickname, [staff groups]>
          * @returns {void} > nothing
          */
         function validateDatabase() {
@@ -557,6 +560,14 @@ registerPlugin(
             });
         }
 
+        /**
+         * Store a client to the script's database if they are not already stored;
+         * Can also update information if entry is alreadyp present;
+         * @param {String} uid >
+         * @param {String} nick >
+         * @param {Array} groups >
+         * @returns {void} > nothing
+         */
         function storeClient(uid, nick, groups) {
             if (!store.getKeys().includes(uid)) {
                 store.set(uid, [nick, groups]);
