@@ -11,6 +11,29 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.8.0] - 2020-08-03
+
+### Added
+- ability to set custom text for groups which are considered empty ([#9](https://github.com/RLNT/sinus-staff-list/issues/9))
+  - groups are considered empty if they have no clients assigned/stored to them
+  - before this version, these groups were simply skipped and wouldn't be displayed in the staff list
+- ability to display clients in all relevant groups they have ([#11](https://github.com/RLNT/sinus-staff-list/issues/11))
+  - previously clients were only displayed in the group with the highest priority
+- manual command to drop the whole database/reset the script
+- new database validation to remove invalid and deprecated entries
+- documentation for all functions
+
+### Changed
+- slightly increased performance by a lot of code optimization
+- improved error handling and config option checks
+- options to configure what counts as AFK are now check boxes
+
+### Fixed
+- additional group list not being recognized correctly
+- description updating too often by not checking changes correctly
+- very rare case of the script not starting because of an infinite promise loop
+
+
 ## [1.5.0] - 2020-06-24
 
 ### Added
@@ -77,6 +100,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.8.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.5.0..v1.8.0
 [1.5.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.3.0..v1.5.0
 [1.3.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.2.0..v1.3.0
 [1.2.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.1.0..v1.2.0
