@@ -563,9 +563,9 @@ registerPlugin(
         /**
          * Store a client to the script's database if they are not already stored;
          * Can also update information if entry is alreadyp present;
-         * @param {String} uid >
-         * @param {String} nick >
-         * @param {Array} groups >
+         * @param {String} uid > The UID of the client to store
+         * @param {String} nick > The nickname of the client to store
+         * @param {Array} groups > The relevant staff groups of the client to store
          * @returns {void} > nothing
          */
         function storeClient(uid, nick, groups) {
@@ -583,6 +583,12 @@ registerPlugin(
             updateStaffClients();
         }
 
+        /**
+         * Remove a client from the script's database if they are stored;
+         * Will give feedback if the entry was removed
+         * @param {String} uid > The UID of the client to remove
+         * @returns {Boolean} > True if the client was removed, False if no entry was found
+         */
         function removeClient(uid) {
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
