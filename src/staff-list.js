@@ -566,6 +566,8 @@ registerPlugin(
             } else if (store.get(uid)[1] !== groups) {
                 store.unset(uid);
                 store.set(uid, [nick, groups]);
+            } else {
+                return;
             }
             updateStaffClients();
         }
