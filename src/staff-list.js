@@ -192,6 +192,85 @@ registerPlugin(
                 ]
             },
             {
+                name: 'dbRemoveCommand',
+                title: 'DB-Remove-Command > Do you want a command to remove the whole database of the script? This can be used to reset the script.',
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'dbCommand',
+                title: 'Command > Define the command you want to use to delete the whole database!',
+                type: 'string',
+                placeholder: '!removedatabase',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandServer',
+                title: "Server > Do you want the bot to accept the command when it's sent in the server chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandChannel',
+                title: "Channel > Do you want the bot to accept the command when it's sent in the channel chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandPrivate',
+                title: "Private > Do you want the bot to accept the command when it's sent in the private chat?",
+                type: 'checkbox',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandClients',
+                title: 'Clients > Define a list of client IDs that should be allowed to use the command!',
+                type: 'strings',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandGroups',
+                title: 'Groups > Define a list of group IDs that should be allowed to use the command!',
+                type: 'strings',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer1',
                 title: ''
             },
@@ -439,7 +518,7 @@ registerPlugin(
             awayMute = false;
             awayDeaf = false;
         }
-        const removeCommand = varDef(config.removeCommand, 1) == 0;
+        let removeCommand = varDef(config.removeCommand, 1) == 0;
         let command, commandServer, commandChannel, commandPrivate, commandClients, commandGroups;
         if (removeCommand) {
             command = varDef(config.command, '!remove');
@@ -448,6 +527,16 @@ registerPlugin(
             commandPrivate = varDef(config.commandPrivate, false);
             commandClients = varDef(config.commandClients, []);
             commandGroups = varDef(config.commandGroups, []);
+        }
+        let dbRemoveCommand = varDef(config.dbRemoveCommand, 1) == 0;
+        let dbCommand, dbCommandServer, dbCommandChannel, dbCommandPrivate, dbCommandClients, dbCommandGroups;
+        if (dbRemoveCommand) {
+            dbCommand = varDef(config.dbCommand, '!removedatabase');
+            dbCommandServer = varDef(config.dbCommandServer, false);
+            dbCommandChannel = varDef(config.dbCommandChannel, false);
+            dbCommandPrivate = varDef(config.dbCommandPrivate, false);
+            dbCommandClients = varDef(config.dbCommandClients, []);
+            dbCommandGroups = varDef(config.dbCommandGroups, []);
         }
         const template = varDef(config.template, 1) == 0;
         let username, userLine, groupSection, separator, phraseOnline, phraseAway, phraseOffline;
@@ -1007,47 +1096,95 @@ registerPlugin(
                 const client = event.client;
                 if (client.isSelf()) return;
                 const message = event.text;
-                if (!message.startsWith(command)) return;
 
-                // check command permission
-                let permission = false;
-                if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
-                if (commandGroups.length > 0) {
-                    for (let group of client.getServerGroups()) {
-                        if (commandGroups.includes(group.id())) {
-                            permission = true;
-                            break;
+                // db remove command
+                if (message.substring(0, message.length) === dbCommand) {
+                    // check command permission
+                    let permission = false;
+                    if (dbCommandClients.length > 0 && dbCommandClients.includes(client.uid())) permission = true;
+                    if (dbCommandGroups.length > 0) {
+                        for (let group of client.getServerGroups()) {
+                            if (dbCommandGroups.includes(group.id())) {
+                                permission = true;
+                                break;
+                            }
                         }
                     }
-                }
-                if (!permission) {
-                    client.chat("You don't have permission to perform this command!");
-                    return;
-                }
+                    if (!permission) {
+                        client.chat("You don't have permission to perform this command!");
+                        return;
+                    }
 
-                // check chat channel
-                switch (event.mode) {
-                    case 1:
-                        // private chat
-                        if (!commandPrivate) return;
-                        break;
-                    case 2:
-                        // channel chat
-                        if (!commandChannel) return;
-                        break;
-                    case 3:
-                        // server chat
-                        if (!commandServer) return;
-                        break;
-                }
+                    // check chat channel
+                    switch (event.mode) {
+                        case 1:
+                            // private chat
+                            if (!dbCommandPrivate) return;
+                            break;
+                        case 2:
+                            // channel chat
+                            if (!dbCommandChannel) return;
+                            break;
+                        case 3:
+                            // server chat
+                            if (!dbCommandServer) return;
+                            break;
+                    }
 
-                // perform the actual command
-                const uid = message.substring(command.length, message.length).trim();
-                if (removeClient(uid)) {
-                    client.chat('The client was successfully removed!');
+                    // perform the actual command
+                    let deleted = 0;
+                    store.getKeys().forEach(key => {
+                        store.unset(key);
+                        deleted++;
+                    });
+                    updateStaffClients();
                     updateDescription(staffGroups, channel);
-                } else {
-                    client.chat('The client was not found in the database! Make sure to send the correct UID.');
+                    if (deleted === 0) {
+                        client.chat('The database is already empty!');
+                    } else {
+                        client.chat('The database was successfully wiped! ' + deleted + ' entries have been removed.');
+                    }
+                } else if (message.substring(0, message.length) === command) {
+                    // check command permission
+                    let permission = false;
+                    if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
+                    if (commandGroups.length > 0) {
+                        for (let group of client.getServerGroups()) {
+                            if (commandGroups.includes(group.id())) {
+                                permission = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!permission) {
+                        client.chat("You don't have permission to perform this command!");
+                        return;
+                    }
+
+                    // check chat channel
+                    switch (event.mode) {
+                        case 1:
+                            // private chat
+                            if (!commandPrivate) return;
+                            break;
+                        case 2:
+                            // channel chat
+                            if (!commandChannel) return;
+                            break;
+                        case 3:
+                            // server chat
+                            if (!commandServer) return;
+                            break;
+                    }
+
+                    // perform the actual command
+                    const uid = message.substring(command.length, message.length).trim();
+                    if (removeClient(uid)) {
+                        client.chat('The client was successfully removed!');
+                        updateDescription(staffGroups, channel);
+                    } else {
+                        client.chat('The client was not found in the database! Make sure to send the correct UID.');
+                    }
                 }
             });
         }
