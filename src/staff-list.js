@@ -21,7 +21,7 @@ registerPlugin(
             {
                 name: 'functionality',
                 title:
-                    "The script stores usernames from people that should of the staff groups. Each user you want to list has to join the server at least once while the script is running. If the script doesn't have any stored users for a specific group yet, it will not be displayed."
+                    "The script stores usernames from people that should of the staff groups. Each client you want to list has to join the server at least once while the script is running. If the script doesn't have any stored clients for a specific group yet, it will not be displayed."
             },
             {
                 name: 'configuration',
@@ -114,13 +114,13 @@ registerPlugin(
             {
                 name: 'removeCommand',
                 title:
-                    'Remove-Command > Do you want a command to remove users manually from the staff list? This can be helpful if they were offline when you removed them from a group or for similar situations.',
+                    'Remove-Command > Do you want a command to remove clients manually from the staff list? This can be helpful if they were offline when you removed them from a group or for similar situations.',
                 type: 'select',
                 options: ['Yes', 'No']
             },
             {
                 name: 'command',
-                title: 'Command > Define the command you want to use to delete a user manually!',
+                title: 'Command > Define the command you want to use to delete a client manually!',
                 type: 'string',
                 placeholder: '!remove',
                 indent: 1,
@@ -211,7 +211,7 @@ registerPlugin(
             },
             {
                 name: 'tUsername',
-                title: 'Username > Define what the name of a user in the list should look like! | placeholders: %name% - name of the user',
+                title: 'Username > Define what the name of a client in the list should look like! | placeholders: %name% - name of the client',
                 type: 'string',
                 placeholder: '[B]%name%[/B]',
                 indent: 1,
@@ -224,7 +224,7 @@ registerPlugin(
             },
             {
                 name: 'tPhraseOnline',
-                title: 'Online-Phrase > Define what the phrase if a user is online should look like!',
+                title: 'Online-Phrase > Define what the phrase if a client is online should look like!',
                 type: 'string',
                 placeholder: '[COLOR=#00ff00][B]ONLINE[/B][/COLOR]',
                 indent: 1,
@@ -237,7 +237,7 @@ registerPlugin(
             },
             {
                 name: 'tPhraseAway',
-                title: 'Away-Phrase > Define what the phrase if a user is away/afk should look like!',
+                title: 'Away-Phrase > Define what the phrase if a client is away/afk should look like!',
                 type: 'string',
                 placeholder: '[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]',
                 indent: 1,
@@ -254,7 +254,7 @@ registerPlugin(
             },
             {
                 name: 'tPhraseOffline',
-                title: 'Offline-Phrase > Define what the phrase if a user is offline should look like!',
+                title: 'Offline-Phrase > Define what the phrase if a client is offline should look like!',
                 type: 'string',
                 placeholder: '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]',
                 indent: 1,
@@ -306,7 +306,7 @@ registerPlugin(
             },
             {
                 name: 'phraseOnline',
-                title: 'Online-Phrase > Define what the phrase if a user is online should look like!',
+                title: 'Online-Phrase > Define what the phrase if a client is online should look like!',
                 type: 'string',
                 placeholder: '[COLOR=#00ff00][B]ONLINE[/B][/COLOR]',
                 indent: 1,
@@ -319,7 +319,7 @@ registerPlugin(
             },
             {
                 name: 'phraseAway',
-                title: 'Away-Phrase > Define what the phrase if a user is away/afk should look like!',
+                title: 'Away-Phrase > Define what the phrase if a client is away/afk should look like!',
                 type: 'string',
                 placeholder: '[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]',
                 indent: 1,
@@ -336,7 +336,7 @@ registerPlugin(
             },
             {
                 name: 'phraseOffline',
-                title: 'Offline-Phrase > Define what the phrase if a user is offline should look like!',
+                title: 'Offline-Phrase > Define what the phrase if a client is offline should look like!',
                 type: 'string',
                 placeholder: '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]',
                 indent: 1,
@@ -377,7 +377,7 @@ registerPlugin(
             {
                 name: 'priority',
                 title:
-                    'The order in which you define the groups is important! Priority of the groups goes from top to bottom. If a user has two groups, they will be displayed in the group which comes first in the config.'
+                    'The order in which you define the groups is important! Priority of the groups goes from top to bottom. If a client has two groups, they will be displayed in the group which comes first in the config.'
             },
             {
                 name: 'staffGroups',
@@ -422,7 +422,7 @@ registerPlugin(
         const store = require('store');
 
         // GLOBAL VARS
-        let staffUsers = [];
+        let staffClients = [];
         let groupList = [];
 
         // CONFIG OPTIONS
@@ -542,16 +542,16 @@ registerPlugin(
             store.getKeys().forEach(key => {
                 // delete entries from database which do not contain group objects
                 if (Array.isArray(store.get(key)[1])) {
-                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) removeUser(key);
+                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) removeClient(key);
                 } else {
-                    if (typeof store.get(key)[1] !== 'object') removeUser(key);
+                    if (typeof store.get(key)[1] !== 'object') removeClient(key);
                 }
-                // remove all users from database who do not have a required group
-                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeUser(key);
+                // remove all clients from database who do not have a relevant group
+                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
             });
         }
 
-        function storeUser(uid, nick, groups) {
+        function storeClient(uid, nick, groups) {
             if (!store.getKeys().includes(uid)) {
                 store.set(uid, [nick, groups]);
             } else if (store.get(uid)[0] !== nick) {
@@ -561,27 +561,27 @@ registerPlugin(
                 store.unset(uid);
                 store.set(uid, [nick, groups]);
             }
-            updateStaffUsers();
+            updateStaffClients();
         }
 
-        function removeUser(uid) {
+        function removeClient(uid) {
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
-                updateStaffUsers();
+                updateStaffClients();
                 return true;
             } else {
                 return false;
             }
         }
 
-        function updateStaffUsers() {
+        function updateStaffClients() {
             let list = [];
             const keys = store.getKeys();
             keys.forEach(key => {
                 list.push([key, store.get(key)[0], store.get(key)[1]]);
             });
 
-            staffUsers = list;
+            staffClients = list;
         }
 
         function getStaffGroupsFromClient(client, staffGroups) {
@@ -620,11 +620,11 @@ registerPlugin(
             return false;
         }
 
-        function getFormattedUsername(staffUser) {
+        function getFormattedUsername(staffClient) {
             if (clickable) {
-                return `[URL=client://0/${staffUser[0]}]${staffUser[1]}[/URL]`;
+                return `[URL=client://0/${staffClient[0]}]${staffClient[1]}[/URL]`;
             } else {
-                return staffUser[1];
+                return staffClient[1];
             }
         }
 
@@ -656,20 +656,20 @@ registerPlugin(
             let staffOnline = [];
             let staffAway = [];
             let staffOffline = [];
-            staffUsers.forEach(staffUser => {
-                const client = backend.getClientByUID(staffUser[0]);
+            staffClients.forEach(staffClient => {
+                const client = backend.getClientByUID(staffClient[0]);
                 if (client !== undefined) {
                     if (away) {
                         if (isAway(client)) {
-                            staffAway.push(staffUser);
+                            staffAway.push(staffClient);
                         } else {
-                            staffOnline.push(staffUser);
+                            staffOnline.push(staffClient);
                         }
                     } else {
-                        staffOnline.push(staffUser);
+                        staffOnline.push(staffClient);
                     }
                 } else {
-                    staffOffline.push(staffUser);
+                    staffOffline.push(staffClient);
                 }
             });
             staffOnline.sort((a, b) => {
@@ -695,54 +695,54 @@ registerPlugin(
             const [staffOnline, staffAway, staffOffline] = getSortedStaffList();
             let description = '';
             staffGroups.forEach(staffGroup => {
-                let staffUsersToList = '';
+                let staffClientsToList = '';
                 if (multiple) {
-                    staffOnline.forEach(staffUser => {
-                        if (staffUser[2].some(group => group.id === staffGroup.id)) {
-                            const staffUserFormatted = getFormattedUsername(staffUser);
-                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
-                            staffUsersToList += `${staffUserToList}\n`;
+                    staffOnline.forEach(staffClient => {
+                        if (staffClient[2].some(group => group.id === staffGroup.id)) {
+                            const staffClientFormatted = getFormattedUsername(staffClient);
+                            const staffClientToList = getFormattedUserLine(staffClientFormatted, 0);
+                            staffClientsToList += `${staffClientToList}\n`;
                         }
                     });
-                    staffAway.forEach(staffUser => {
-                        if (staffUser[2].some(group => group.id === staffGroup.id)) {
-                            const staffUserFormatted = getFormattedUsername(staffUser);
-                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
-                            staffUsersToList += `${staffUserToList}\n`;
+                    staffAway.forEach(staffClient => {
+                        if (staffClient[2].some(group => group.id === staffGroup.id)) {
+                            const staffClientFormatted = getFormattedUsername(staffClient);
+                            const staffClientToList = getFormattedUserLine(staffClientFormatted, 1);
+                            staffClientsToList += `${staffClientToList}\n`;
                         }
                     });
-                    staffOffline.forEach(staffUser => {
-                        if (staffUser[2].some(group => group.id === staffGroup.id)) {
-                            const staffUserFormatted = getFormattedUsername(staffUser);
-                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
-                            staffUsersToList += `${staffUserToList}\n`;
+                    staffOffline.forEach(staffClient => {
+                        if (staffClient[2].some(group => group.id === staffGroup.id)) {
+                            const staffClientFormatted = getFormattedUsername(staffClient);
+                            const staffClientToList = getFormattedUserLine(staffClientFormatted, 2);
+                            staffClientsToList += `${staffClientToList}\n`;
                         }
                     });
                 } else {
-                    staffOnline.forEach(staffUser => {
-                        if (staffGroup.id === staffUser[2][0].id) {
-                            const staffUserFormatted = getFormattedUsername(staffUser);
-                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 0);
-                            staffUsersToList += `${staffUserToList}\n`;
+                    staffOnline.forEach(staffClient => {
+                        if (staffGroup.id === staffClient[2][0].id) {
+                            const staffClientFormatted = getFormattedUsername(staffClient);
+                            const staffClientToList = getFormattedUserLine(staffClientFormatted, 0);
+                            staffClientsToList += `${staffClientToList}\n`;
                         }
                     });
-                    staffAway.forEach(staffUser => {
-                        if (staffGroup.id === staffUser[2][0].id) {
-                            const staffUserFormatted = getFormattedUsername(staffUser);
-                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 1);
-                            staffUsersToList += `${staffUserToList}\n`;
+                    staffAway.forEach(staffClient => {
+                        if (staffGroup.id === staffClient[2][0].id) {
+                            const staffClientFormatted = getFormattedUsername(staffClient);
+                            const staffClientToList = getFormattedUserLine(staffClientFormatted, 1);
+                            staffClientsToList += `${staffClientToList}\n`;
                         }
                     });
-                    staffOffline.forEach(staffUser => {
-                        if (staffGroup.id === staffUser[2][0].id) {
-                            const staffUserFormatted = getFormattedUsername(staffUser);
-                            const staffUserToList = getFormattedUserLine(staffUserFormatted, 2);
-                            staffUsersToList += `${staffUserToList}\n`;
+                    staffOffline.forEach(staffClient => {
+                        if (staffGroup.id === staffClient[2][0].id) {
+                            const staffClientFormatted = getFormattedUsername(staffClient);
+                            const staffClientToList = getFormattedUserLine(staffClientFormatted, 2);
+                            staffClientsToList += `${staffClientToList}\n`;
                         }
                     });
                 }
 
-                if (staffUsersToList === '') {
+                if (staffClientsToList === '') {
                     if (!emptyGroup) return;
                     description += `${staffGroup.name}\n`;
                     description += emptyGroupText.replace('%lb%', '\n');
@@ -750,10 +750,10 @@ registerPlugin(
                     if (template) {
                         description += groupSection
                             .replace('%group%', staffGroup.name)
-                            .replace('%users%', staffUsersToList.substring(0, staffUsersToList.length - 1))
+                            .replace('%users%', staffClientsToList.substring(0, staffClientsToList.length - 1))
                             .replace('%lb%', '\n');
                     } else {
-                        description += `${staffGroup.name}\n${staffUsersToList}${separator}\n`;
+                        description += `${staffGroup.name}\n${staffClientsToList}${separator}\n`;
                     }
                 }
             });
@@ -774,7 +774,7 @@ registerPlugin(
                 log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
                 return;
             } else if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
-                log("There are no users whitelisted for the remove command although it's enabled! Deactivating script...");
+                log("There are no clients whitelisted for the remove command although it's enabled! Deactivating script...");
                 return;
             } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
                 log('There is no text channel selected for the bot to listen to commands! Deactivating script...');
@@ -802,20 +802,20 @@ registerPlugin(
             // validate database
             validateDatabase();
 
-            // store all online listed staff users
+            // store all online listed staff clients
             backend.getClients().forEach(client => {
                 const clientStaffGroups = getStaffGroupsFromClient(client, staffGroups);
                 if (clientStaffGroups !== null) {
-                    storeUser(client.uid(), client.nick(), clientStaffGroups);
+                    storeClient(client.uid(), client.nick(), clientStaffGroups);
                 } else {
-                    removeUser(client.uid());
+                    removeClient(client.uid());
                 }
             });
 
             // update the cached member list
-            updateStaffUsers();
+            updateStaffClients();
 
-            // update the description for all currently known staff users
+            // update the description for all currently known staff clients
             updateDescription(staffGroups, channel);
 
             // MOVE EVENT
@@ -828,12 +828,12 @@ registerPlugin(
                 const nick = client.nick();
                 const groups = getStaffGroupsFromClient(client, staffGroups);
 
-                // make sure it's a user that has to be listed
+                // make sure it's a client that has to be listed
                 if (groups !== null) {
                     // on connect or disconnect
                     if (fromChannel === undefined || toChannel === undefined) {
-                        // make sure user is stored
-                        storeUser(uid, nick, groups);
+                        // make sure client is stored
+                        storeClient(uid, nick, groups);
 
                         // update the description
                         updateDescription(staffGroups, channel);
@@ -844,8 +844,8 @@ registerPlugin(
                         updateDescription(staffGroups, channel);
                     }
                 } else {
-                    // if user has no list group but is in the database, delete them
-                    if (removeUser(uid)) {
+                    // if client has no list group but is in the database, delete them
+                    if (removeClient(uid)) {
                         updateDescription(staffGroups, channel);
                     }
                 }
@@ -902,7 +902,7 @@ registerPlugin(
                 const client = event.client;
                 if (client.isSelf()) return;
                 if (groupList.includes(event.serverGroup.id())) {
-                    storeUser(client.uid(), client.nick(), getStaffGroupsFromClient(client, staffGroups));
+                    storeClient(client.uid(), client.nick(), getStaffGroupsFromClient(client, staffGroups));
                     updateDescription(staffGroups, channel);
                 }
             });
@@ -915,9 +915,9 @@ registerPlugin(
                     const groups = getStaffGroupsFromClient(client, staffGroups);
 
                     if (groups === null) {
-                        removeUser(client.uid());
+                        removeClient(client.uid());
                     } else {
-                        storeUser(client.uid(), client.nick(), groups);
+                        storeClient(client.uid(), client.nick(), groups);
                     }
                     updateDescription(staffGroups, channel);
                 }
@@ -964,11 +964,11 @@ registerPlugin(
 
                 // perform the actual command
                 const uid = message.substring(command.length, message.length).trim();
-                if (removeUser(uid)) {
-                    client.chat('The user was successfully removed!');
+                if (removeClient(uid)) {
+                    client.chat('The client was successfully removed!');
                     updateDescription(staffGroups, channel);
                 } else {
-                    client.chat('The user was not found in the database! Make sure to send the correct UID.');
+                    client.chat('The client was not found in the database! Make sure to send the correct UID.');
                 }
             });
         }
