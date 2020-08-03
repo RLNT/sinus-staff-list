@@ -653,6 +653,11 @@ registerPlugin(
             return client.isAway() || (awayMute && client.isMuted()) || (awayDeaf && client.isDeaf()) || (awayChannel && isInAfkChannel(client));
         }
 
+        /**
+         * Check if a client is in any afk channel which is given in the config
+         * @param {Object} client > The client object to check
+         * @returns > True if the client is in any afk channel, otherwise False
+         */
         function isInAfkChannel(client) {
             for (let channel of client.getChannels()) {
                 if (config.afkChannels.includes(channel.id())) return true;
@@ -824,7 +829,7 @@ registerPlugin(
                 log('The script has loaded successfully!');
 
                 // start the script
-                waitForBackend()
+                waitForBackend(10, 1)
                     .then(() => {
                         main();
                     })
