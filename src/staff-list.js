@@ -832,27 +832,38 @@ registerPlugin(
 
         // LOADING EVENT
         event.on('load', () => {
+            // error prevention that needs script deactivation
             if (config.channel === undefined) {
                 log('There was no channel selected to display the staff list! Deactivating script...');
-                return;
-            } else if (awayChannel && config.afkChannels === undefined) {
-                log('There were no afk channels set up although the afk channel option is enabled! Deactivating the script...');
                 return;
             } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
                 log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
                 return;
-            } else if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
-                log("There are no clients whitelisted for the remove command although it's enabled! Deactivating script...");
-                return;
-            } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
-                log('There is no text channel selected for the bot to listen to commands! Deactivating script...');
-                return;
             } else {
-                log('The script has loaded successfully!');
+                // error prevention that needs feature deactivation
+                if (awayChannel && config.afkChannels === undefined) {
+                    log('There were no afk channels set up although the afk channel option is enabled! Deactivating the feature...');
+                    awayChannel = false;
+                }
+                if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
+                    log("There are no clients whitelisted for the remove command although it's enabled! Deactivating feature...");
+                    removeCommand = false;
+                } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
+                    log('There is no text channel selected for the bot to listen to the remove command! Deactivating feature...');
+                    removeCommand = false;
+                }
+                if (dbRemoveCommand && dbCommandClients.length === 0 && dbCommandGroups.length === 0) {
+                    log("There are no clients whitelisted for the database remove command although it's enabled! Deactivating feature...");
+                    dbRemoveCommand = false;
+                } else if (dbRemoveCommand && !dbCommandServer && !dbCommandChannel && !dbCommandPrivate) {
+                    log('There is no text channel selected for the bot to listen to the database remove command! Deactivating feature...');
+                    dbRemoveCommand = false;
+                }
 
                 // start the script
-                waitForBackend(10, 1)
+                waitForBackend(10, 3)
                     .then(() => {
+                        log('The script has loaded successfully!');
                         main();
                     })
                     .catch(() => {
