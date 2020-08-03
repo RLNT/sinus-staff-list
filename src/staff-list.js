@@ -623,20 +623,22 @@ registerPlugin(
         function getStaffGroupsFromClient(client, staffGroups) {
             let clientStaffGroups = [];
             for (let staffGroup of staffGroups) {
-                if (isStaffClient(client, staffGroup.clients) || hasStaffGroup(client, staffGroup.groups)) {
-                    clientStaffGroups.push(staffGroup);
-                }
+                if (isStaffGroupMember(client, staffGroup)) clientStaffGroups.push(staffGroup);
             }
             return clientStaffGroups;
         }
 
-        function isStaffClient(client, clients) {
-            return clients.includes(client.uid());
-        }
+        /**
+         * Check if a client is a valid member of a given staff group from the config
+         * @param {Object} client > The client object to check
+         * @param {Object} staffGroup > The staff group object from the config to check
+         * @returns > True if the client is a valid member, otherwise False
+         */
+        function isStaffGroupMember(client, staffGroup) {
+            if (staffGroup.clients.includes(client.uid())) return true;
 
-        function hasStaffGroup(client, groups) {
             for (let clientGroup of client.getServerGroups()) {
-                if (groups.includes(clientGroup.id())) return true;
+                if (staffGroup.groups.includes(clientGroup.id())) return true;
             }
 
             return false;
