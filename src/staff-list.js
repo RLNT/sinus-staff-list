@@ -680,28 +680,34 @@ registerPlugin(
             }
         }
 
+        /**
+         * Format a whole line that will be displayed in the list by adding all small parts together
+         * @param {String} name > The formatted username
+         * @param {Number} status > The online status of the client
+         * @returns {String} > The formatted line
+         */
         function getFormattedUserLine(name, status) {
-            let formattedName = '';
+            let formattedLine = '';
             if (template) {
-                formattedName = userLine.replace('%name%', username.replace('%name%', name)).replace('%lb%', '\n');
+                formattedLine = userLine.replace('%name%', username.replace('%name%', name)).replace('%lb%', '\n');
             } else {
-                formattedName = `${name} - %status%`;
+                formattedLine = `${name} - %status%`;
             }
 
             // 0 = online, 1 = away, 2 = offline
             switch (status) {
                 case 0:
-                    formattedName = formattedName.replace('%status%', phraseOnline);
+                    formattedLine = formattedLine.replace('%status%', phraseOnline);
                     break;
                 case 1:
-                    formattedName = formattedName.replace('%status%', phraseAway);
+                    formattedLine = formattedLine.replace('%status%', phraseAway);
                     break;
                 case 2:
-                    formattedName = formattedName.replace('%status%', phraseOffline);
+                    formattedLine = formattedLine.replace('%status%', phraseOffline);
                     break;
             }
 
-            return formattedName;
+            return formattedLine;
         }
 
         function getSortedStaffList() {
