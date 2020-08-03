@@ -245,6 +245,100 @@ Please click the option you want to configure to get more information.
     - if no clients or groups are whitelisted, the feature will be disabled automatically
     </details>
 </details>
+<details>
+    <summary>
+        DB-Remove-Command
+    </summary>
+
+*Details*:
+- optional option | default value: `No`
+- select `Yes` or `No`
+
+*Info*:
+- defines if there should be a command to manually drop the whole script database
+- this can be used to manually reset the script without touching any of the config options
+
+*Advanced Options*:
+- the following options are only shown if you selected `Yes` for the *DB-Remove-Command*
+
+    <details>
+        <summary>
+            Command
+        </summary>
+
+    *Details*:
+    - optional option | default value: `!removedatabase`
+    - enter the command text
+    - it's case sensitive
+
+    *Info*:
+    - defines the phrase that should be the database remove command
+    </details>
+    <details>
+        <summary>
+            Server
+        </summary>
+
+    *Details*:
+    - optional option | default value: `unchecked`
+    - check/uncheck the box
+
+    *Info*:
+    - defines if the bot should listen to the command when it's sent in the server chat
+    </details>
+    <details>
+        <summary>
+            Channel
+        </summary>
+
+    *Details*:
+    - optional option | default value: `unchecked`
+    - check/uncheck the box
+
+    *Info*:
+    - defines if the bot should listen to the command when it's sent in the channel chat
+    </details>
+    <details>
+        <summary>
+            Private
+        </summary>
+
+    *Details*:
+    - optional option | default value: `unchecked`
+    - check/uncheck the box
+
+    *Info*:
+    - defines if the bot should listen to the command when it's sent in the private chat
+    </details>
+    <details>
+        <summary>
+            Clients
+        </summary>
+
+    *Details*:
+    - semi-required option | default value: `none`
+    - enter the client UIDs
+
+    *Info*:
+    - defines if a client has the permission to use the database remove command
+    - at least one client must be defined if no group is whitelisted for the command
+    - if no clients or groups are whitelisted, the feature will be disabled automatically
+    </details>
+    <details>
+        <summary>
+            Groups
+        </summary>
+
+    *Details*:
+    - semi-required option | default value: `none`
+    - enter the group IDs
+
+    *Info*:
+    - defines if a group has the permission to use the database remove command
+    - at least one group must be defined if no client is whitelisted for the command
+    - if no clients or groups are whitelisted, the feature will be disabled automatically
+    </details>
+</details>
 
 
 ## **Text & Format Options**
