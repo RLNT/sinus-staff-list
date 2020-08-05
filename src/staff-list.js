@@ -16,12 +16,12 @@ registerPlugin(
         vars: [
             {
                 name: 'required',
-                title: 'All fields that are marked with (*) are required!'
+                title: 'All fields that are marked with (*) are required, fields with [*] are semi-required and all others are optional and have a default value.'
             },
             {
                 name: 'functionality',
                 title:
-                    "The script stores usernames from people that should of the staff groups. Each client you want to list has to join the server at least once while the script is running. If the script doesn't have any stored clients for a specific group yet, it will not be displayed."
+                    "The script stores usernames of clients with relevant groups. Each client you want to list has to join the server at least once while the script is running. A client can't be displayed in the staff list if they are offline and are not stored yet."
             },
             {
                 name: 'configuration',
@@ -60,7 +60,7 @@ registerPlugin(
             },
             {
                 name: 'awayChannel',
-                title: 'Away-Channels > Do you want to set someone away/afk if they join any afk channel?',
+                title: 'Away-Channels > Do you want to set someone away/afk if they join an afk channel?',
                 type: 'select',
                 options: ['Yes', 'No'],
                 indent: 1,
@@ -113,8 +113,7 @@ registerPlugin(
             },
             {
                 name: 'removeCommand',
-                title:
-                    'Remove-Command > Do you want a command to remove clients manually from the staff list? This can be helpful if they were offline when you removed them from a group or for similar situations.',
+                title: "Remove-Command > Do you want a command to remove clients manually from the script's database?",
                 type: 'select',
                 options: ['Yes', 'No']
             },
@@ -133,7 +132,7 @@ registerPlugin(
             },
             {
                 name: 'commandServer',
-                title: "Server > Do you want the bot to accept the command when it's sent in the server chat?",
+                title: "Server > Do you want the bot listening to the command when it's being sent in the server chat?",
                 type: 'checkbox',
                 indent: 1,
                 conditions: [
@@ -145,7 +144,7 @@ registerPlugin(
             },
             {
                 name: 'commandChannel',
-                title: "Channel > Do you want the bot to accept the command when it's sent in the channel chat?",
+                title: "Channel > Do you want the bot listening to the command when it's being sent in the channel chat?",
                 type: 'checkbox',
                 indent: 1,
                 conditions: [
@@ -157,7 +156,7 @@ registerPlugin(
             },
             {
                 name: 'commandPrivate',
-                title: "Private > Do you want the bot to accept the command when it's sent in the private chat?",
+                title: "Private > Do you want the bot listening to the command when it's being sent in the private chat?",
                 type: 'checkbox',
                 indent: 1,
                 conditions: [
@@ -169,7 +168,7 @@ registerPlugin(
             },
             {
                 name: 'commandClients',
-                title: 'Clients > Define a list of client IDs that should be allowed to use the command!',
+                title: 'Clients > Define the list of client IDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -181,7 +180,7 @@ registerPlugin(
             },
             {
                 name: 'commandGroups',
-                title: 'Groups > Define a list of group IDs that should be allowed to use the command!',
+                title: 'Groups > Define the list of group IDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -193,7 +192,7 @@ registerPlugin(
             },
             {
                 name: 'commandNoPerm',
-                title: "Permission-Text > Define the text that should be send to the command invoker if they don't have permission to use the command!",
+                title: "Permission-Text > Define the text that should be sent to the command invoker if they don't have permission to use the command!",
                 type: 'string',
                 placeholder: "You don't have permission to perform this command!",
                 indent: 1,
@@ -206,7 +205,7 @@ registerPlugin(
             },
             {
                 name: 'commandArgument',
-                title: "Missing-Argument-Text > Define the text that should be send to the command invoker if they didn't pass an argument to the command!",
+                title: "Missing-Argument-Text > Define the text that should be sent to the command invoker if they didn't pass an argument to the command!",
                 type: 'string',
                 placeholder: 'Not enough arguments! You have to add a client UID to the command! Usage: !remove <client UID>',
                 indent: 1,
@@ -219,7 +218,7 @@ registerPlugin(
             },
             {
                 name: 'commandInvalid',
-                title: 'Invalid-UID-Text > Define the text that should be send to the command invoker if the argument they entered is not a valid client UID! | placeholders: %arg% - entered argument',
+                title: 'Invalid-UID-Text > Define the text that should be sent to the command invoker if the argument they entered is not a valid client UID! | placeholders: %arg% - entered argument',
                 type: 'string',
                 placeholder: '"%arg%" is not a valid client UID! Make sure to send the correct one.',
                 indent: 1,
@@ -233,7 +232,7 @@ registerPlugin(
             {
                 name: 'commandNotFound',
                 title:
-                    "Not-Found-Text > Define the text that should be send to the command invoker if the target client couldn't be found in the database! | placeholders: %uid% - uid of the target client",
+                    "Not-Found-Text > Define the text that should be sent to the command invoker if the target client couldn't be found in the database! | placeholders: %uid% - uid of the target client",
                 type: 'string',
                 placeholder: 'The client (%uid%) was not found in the database! Make sure to send the correct UID.',
                 indent: 1,
@@ -246,7 +245,7 @@ registerPlugin(
             },
             {
                 name: 'commandSuccess',
-                title: 'Success-Text > Define the text that should be send to the command invoker if the target client was successfully removed! | placeholders: %uid% - uid of the target client',
+                title: 'Success-Text > Define the text that should be sent to the command invoker if the target client was successfully removed! | placeholders: %uid% - uid of the target client',
                 type: 'string',
                 placeholder: 'The client (%uid%) was successfully removed!',
                 indent: 1,
@@ -259,7 +258,7 @@ registerPlugin(
             },
             {
                 name: 'dbRemoveCommand',
-                title: 'DB-Remove-Command > Do you want a command to remove the whole database of the script? This can be used to reset the script.',
+                title: 'DB-Remove-Command > Do you want a command to drop/remove the whole database of the script?',
                 type: 'select',
                 options: ['Yes', 'No']
             },
@@ -278,7 +277,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandServer',
-                title: "Server > Do you want the bot to accept the command when it's sent in the server chat?",
+                title: "Server > Do you want the bot listening to the command when it's being sent in the server chat?",
                 type: 'checkbox',
                 indent: 1,
                 conditions: [
@@ -290,7 +289,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandChannel',
-                title: "Channel > Do you want the bot to accept the command when it's sent in the channel chat?",
+                title: "Channel > Do you want the bot listening to the command when it's being sent in the channel chat?",
                 type: 'checkbox',
                 indent: 1,
                 conditions: [
@@ -302,7 +301,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandPrivate',
-                title: "Private > Do you want the bot to accept the command when it's sent in the private chat?",
+                title: "Private > Do you want the bot listening to the command when it's being sent in the private chat?",
                 type: 'checkbox',
                 indent: 1,
                 conditions: [
@@ -314,7 +313,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandClients',
-                title: 'Clients > Define a list of client IDs that should be allowed to use the command!',
+                title: 'Clients > Define the list of client IDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -326,7 +325,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandGroups',
-                title: 'Groups > Define a list of group IDs that should be allowed to use the command!',
+                title: 'Groups > Define the list of group IDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -338,7 +337,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandNoPerm',
-                title: "Permission-Text > Define the text that should be send to command invoker if they don't have permission to use the command!",
+                title: "Permission-Text > Define the text that should be sent to the command invoker if they don't have permission to use the command!",
                 type: 'string',
                 placeholder: "You don't have permission to perform this command!",
                 indent: 1,
@@ -351,7 +350,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandEmpty',
-                title: 'Empty-Database-Text > Define the text that should be send to the command invoker if database is already empty!',
+                title: 'Empty-Database-Text > Define the text that should be sent to the command invoker if database is already empty!',
                 type: 'string',
                 placeholder: 'The database is already empty!',
                 indent: 1,
@@ -365,7 +364,7 @@ registerPlugin(
             {
                 name: 'dbCommandSuccess',
                 title:
-                    'Success-Text > Define the text that should be send to the command invoker if the database was successfully dropped/removed! | placeholders: %amount% - amount of database removals',
+                    'Success-Text > Define the text that should be sent to the command invoker if the database was successfully dropped/removed! | placeholders: %amount% - amount of database removals',
                 type: 'string',
                 placeholder: 'The database was successfully dropped! %amount% entries have been removed.',
                 indent: 1,
@@ -386,7 +385,7 @@ registerPlugin(
             },
             {
                 name: 'format',
-                title: 'You can use the normal BB code to format your text like in TeamSpeak.'
+                title: 'You can use the normal BB code to format your text, like in TeamSpeak.'
             },
             {
                 name: 'template',
@@ -396,7 +395,7 @@ registerPlugin(
             },
             {
                 name: 'tUsername',
-                title: 'Username > Define what the name of a client in the list should look like! | placeholders: %name% - name of the client',
+                title: 'Username > Define what the name of a client in the staff list should look like! | placeholders: %name% - name of the client',
                 type: 'string',
                 placeholder: '[B]%name%[/B]',
                 indent: 1,
@@ -452,7 +451,7 @@ registerPlugin(
             },
             {
                 name: 'tMemberLine',
-                title: 'User-Line > Define what a full line in the member list should look like! | placeholders: %name% - formatted username, %status% - formatted status phrase, %lb% - line break',
+                title: 'User-Line > Define what a full line in the staff list should look like! | placeholders: %name% - formatted username, %status% - formatted status phrase, %lb% - line break',
                 type: 'multiline',
                 placeholder: '%name% [COLOR=#aaff00]>[/COLOR] %status%',
                 indent: 1,
@@ -465,7 +464,8 @@ registerPlugin(
             },
             {
                 name: 'tGroupSection',
-                title: 'Group-Section > Define what a group section should look like! | placeholders: %group% - formatted group name, %users% - formatted member list, %lb% - line break',
+                title:
+                    'Group-Section > Define what a group section in the staff list should look like! | placeholders: %group% - formatted group name, %users% - formatted member list, %lb% - line break',
                 type: 'multiline',
                 placeholder: '[center]> %group% <\n%users%\n____________________\n[/center]%lb%',
                 indent: 1,
@@ -478,7 +478,7 @@ registerPlugin(
             },
             {
                 name: 'separator',
-                title: 'Separator > Define what the separator between each group section should look like!',
+                title: 'Separator > Define what the separator between each group section in the staff list should look like!',
                 type: 'multiline',
                 placeholder: '_______________________________________',
                 indent: 1,
@@ -534,7 +534,7 @@ registerPlugin(
             },
             {
                 name: 'emptyGroup',
-                title: 'Empty-Groups > Do you want to display a custom text for a group in case no one is assigned/stored to it?',
+                title: 'Empty-Groups > Do you want to display empty groups in the staff list? A group is considered empty if no client is assigned/stored to it?',
                 type: 'select',
                 options: ['Yes', 'No']
             },
@@ -561,8 +561,7 @@ registerPlugin(
             },
             {
                 name: 'priority',
-                title:
-                    'The order in which you define the groups is important! Priority of the groups goes from top to bottom. If a client has two groups, they will be displayed in the group which comes first in the config.'
+                title: 'The order in which you define the groups is important! Priority of the groups goes from top to bottom.'
             },
             {
                 name: 'staffGroups',
@@ -578,20 +577,20 @@ registerPlugin(
                     },
                     {
                         name: 'name',
-                        title: 'Name > Define the name that should be shown for the group! If not set it will use the default group name.',
+                        title: 'Name > Define the name that should be shown for the group! If not set, it will use the default group name.',
                         indent: 2,
                         type: 'multiline',
                         placeholder: '[COLOR=#aa007f][size=12][B]ADMIN[/B][/size][/COLOR]'
                     },
                     {
                         name: 'clients',
-                        title: 'Clients > Define a list of additional client IDs that should also count towards this staff group!',
+                        title: 'Clients > Define the list of additional client IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     },
                     {
                         name: 'groups',
-                        title: 'Groups > Define a list of additional group IDs that should also count towards this staff group!',
+                        title: 'Groups > Define the list of additional group IDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     }
