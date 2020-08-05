@@ -493,7 +493,7 @@ registerPlugin(
             }
         ]
     },
-    (_, config) => {
+    (_, scriptConfig) => {
         // DEPENDENCIES
         const engine = require('engine');
         const backend = require('backend');
@@ -505,75 +505,65 @@ registerPlugin(
         let groupList = []; // list of all relevant group IDs
 
         // CONFIG OPTIONS
-        const clickable = varDef(config.clickable, 0) == 0;
-        const multiple = varDef(config.multiple, 1) == 0;
-        const away = varDef(config.away, 1) == 0;
-        let awayChannel, awayMute, awayDeaf;
-        if (away) {
-            awayChannel = varDef(config.awayChannel, 1) == 0;
-            awayMute = varDef(config.awayMute, false);
-            awayDeaf = varDef(config.awayDeaf, false);
-        } else {
-            awayChannel = false;
-            awayMute = false;
-            awayDeaf = false;
-        }
-        let removeCommand = varDef(config.removeCommand, 1) == 0;
-        let command, commandServer, commandChannel, commandPrivate, commandClients, commandGroups;
-        if (removeCommand) {
-            command = varDef(config.command, '!remove');
-            commandServer = varDef(config.commandServer, false);
-            commandChannel = varDef(config.commandChannel, false);
-            commandPrivate = varDef(config.commandPrivate, false);
-            commandClients = varDef(config.commandClients, []);
-            commandGroups = varDef(config.commandGroups, []);
-        }
-        let dbRemoveCommand = varDef(config.dbRemoveCommand, 1) == 0;
-        let dbCommand, dbCommandServer, dbCommandChannel, dbCommandPrivate, dbCommandClients, dbCommandGroups;
-        if (dbRemoveCommand) {
-            dbCommand = varDef(config.dbCommand, '!removedatabase');
-            dbCommandServer = varDef(config.dbCommandServer, false);
-            dbCommandChannel = varDef(config.dbCommandChannel, false);
-            dbCommandPrivate = varDef(config.dbCommandPrivate, false);
-            dbCommandClients = varDef(config.dbCommandClients, []);
-            dbCommandGroups = varDef(config.dbCommandGroups, []);
-        }
-        const template = varDef(config.template, 1) == 0;
-        let username, userLine, groupSection, separator, phraseOnline, phraseAway, phraseOffline;
-        if (template) {
-            username = varDef(config.tUsername, '[B]%name%[/B]');
-            userLine = varDef(config.tMemberLine, '%name% [COLOR=#aaff00]>[/COLOR] %status%');
-            groupSection = varDef(config.tGroupSection, '[center]%group%\n%users%____________________[/center]');
-            phraseOnline = varDef(config.tPhraseOnline, '[COLOR=#00ff00][B]ONLINE[/B][/COLOR]');
-            phraseAway = varDef(config.tPhraseAway, '[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]');
-            phraseOffline = varDef(config.tPhraseOffline, '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]');
-        } else {
-            separator = varDef(config.separator, '_______________________________________');
-            phraseOnline = varDef(config.phraseOnline, '[COLOR=#00ff00][B]ONLINE[/B][/COLOR]');
-            phraseAway = varDef(config.phraseAway, '[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]');
-            phraseOffline = varDef(config.phraseOffline, '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]');
-        }
-        const emptyGroup = varDef(config.emptyGroup, 1) == 0;
-        let emptyGroupText;
-        if (emptyGroup) emptyGroupText = varDef(config.emptyGroupText, '[COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]');
+        let config = {
+            channel: scriptConfig.channel,
+            clickable: scriptConfig.clickable === 0 || true,
+            multiple: scriptConfig.multiple === 0 || false,
+            away: scriptConfig.away === 0 || false,
+            remove: scriptConfig.removeCommand === 0 || false,
+            dbRemove: scriptConfig.dbRemoveCommand === 0 || false,
+            template: scriptConfig.template === 0 || false,
+            emptyGroup: scriptConfig.emptyGroup === 0 || false,
+            staffGroups: scriptConfig.staffGroups
+        };
+        const away = {
+            awayChannel: config.away ? scriptConfig.awayChannel === 0 || false : false,
+            awayMute: config.away ? scriptConfig.awayMute === true || false : false,
+            awayDeaf: config.away ? scriptConfig.awayDeaf === true || false : false,
+            afkChannels: config.away ? scriptConfig.afkChannels : undefined
+        };
+        const remove = {
+            rCommand: config.remove ? scriptConfig.command || '!remove' : undefined,
+            rServer: config.remove ? scriptConfig.commandServer === true || false : undefined,
+            rChannel: config.remove ? scriptConfig.commandChannel === true || false : undefined,
+            rPrivate: config.remove ? scriptConfig.commandPrivate === true || false : undefined,
+            rClients: config.remove ? scriptConfig.commandClients || [] : undefined,
+            rGroups: config.remove ? scriptConfig.commandGroups || [] : undefined,
+            rPerm: config.remove ? scriptConfig.commandNoPerm || "You don't have permission to perform this command!" : undefined,
+            rArgument: config.remove ? scriptConfig.commandArgument || 'Not enough arguments! You have to add a client UID to the command! Usage: !remove <client UID>' : undefined,
+            rInvalid: config.remove ? scriptConfig.commandInvalid || '"%arg%" is not a valid client UID! Make sure to send the correct one.' : undefined,
+            rNotFound: config.remove ? scriptConfig.commandNotFound || 'The client (%uid%) was not found in the database! Make sure to send the correct UID.' : undefined,
+            rSuccess: config.remove ? scriptConfig.commandSuccess || 'The client (%uid%) was successfully removed!' : undefined
+        };
+        const dbRemove = {
+            dbrCommand: config.dbRemove ? scriptConfig.dbCommand || '!removedatabase' : undefined,
+            dbrServer: config.dbRemove ? scriptConfig.dbCommandServer === true || false : undefined,
+            dbrChannel: config.dbRemove ? scriptConfig.dbCommandChannel === true || false : undefined,
+            dbrPrivate: config.dbRemove ? scriptConfig.dbCommandPrivate === true || false : undefined,
+            dbrClients: config.dbRemove ? scriptConfig.dbCommandClients || [] : undefined,
+            dbrGroups: config.dbRemove ? scriptConfig.dbCommandGroups || [] : undefined,
+            dbrPerm: config.dbRemove ? scriptConfig.dbCommandNoPerm || "You don't have permission to perform this command!" : undefined,
+            dbrEmpty: config.dbRemove ? scriptConfig.dbCommandEmpty || 'The database is already empty!' : undefined,
+            dbrSuccess: config.dbRemove ? scriptConfig.dbCommandSuccess || 'The database was successfully dropped! %amount% entries have been removed.' : undefined
+        };
+        const template = {
+            username: config.template ? scriptConfig.tUsername || '[B]%name%[/B]' : undefined,
+            line: config.template ? scriptConfig.tMemberLine || '%name% [COLOR=#aaff00]>[/COLOR] %status%' : undefined,
+            section: config.template ? scriptConfig.tGroupSection || '[center]%group%\n%users%____________________[/center]' : undefined,
+            pOnline: (config.template ? scriptConfig.tPhraseOnline : scriptConfig.phraseOnline) || '[COLOR=#00ff00][B]ONLINE[/B][/COLOR]',
+            pAway: (config.template ? scriptConfig.tPhraseAway : scriptConfig.phraseAway) || '[COLOR=#c8c8c8][B]AWAY[/B][/COLOR]',
+            pOffline: (config.template ? scriptConfig.tPhraseOffline : scriptConfig.phraseOffline) || '[COLOR=#ff0000][B]OFFLINE[/B][/COLOR]',
+            separator: config.template ? undefined : scriptConfig.separator || '_______________________________________'
+        };
+        const emptyGroup = {
+            emptyText: config.emptyGroup ? scriptConfig.emptyGroupText || '[COLOR=#aa007f][size=12][B]%name%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]' : undefined
+        };
+
+        config = Object.assign(config, away, remove, dbRemove, template, emptyGroup);
 
         // FUNCTIONS
         function log(message) {
             engine.log('Staff-List > ' + message);
-        }
-
-        /**
-         * Set a default value to a variable in case it's not defined in the config
-         * @param {*} configVal > the config variable
-         * @param {*} defaultVal > the default value that should be applied if no config value was found or it's empty
-         * @returns {*} > the actual result of the variable
-         */
-        function varDef(configVal, defaultVal) {
-            if (configVal === undefined || configVal === null || configVal === '') {
-                return defaultVal;
-            } else {
-                return configVal;
-            }
         }
 
         /**
@@ -740,7 +730,7 @@ registerPlugin(
          * @returns {Boolean} > True if the client is counted as away/afk, otherwise False
          */
         function isAway(client) {
-            return client.isAway() || (awayMute && client.isMuted()) || (awayDeaf && client.isDeaf()) || (awayChannel && isInAfkChannel(client));
+            return client.isAway() || (config.awayMute && client.isMuted()) || (config.awayDeaf && client.isDeaf()) || (config.awayChannel && isInAfkChannel(client));
         }
 
         /**
@@ -762,7 +752,7 @@ registerPlugin(
          * @returns {String} > The formatted username
          */
         function getFormattedUsername(staffClient) {
-            if (clickable) {
+            if (config.clickable) {
                 return `[URL=client://0/${staffClient[0]}]${staffClient[1]}[/URL]`;
             } else {
                 return staffClient[1];
@@ -777,8 +767,8 @@ registerPlugin(
          */
         function getFormattedUserLine(name, status) {
             let formattedLine = '';
-            if (template) {
-                formattedLine = userLine.replace('%name%', username.replace('%name%', name)).replace('%lb%', '\n');
+            if (config.template) {
+                formattedLine = config.line.replace('%name%', config.username.replace('%name%', name)).replace('%lb%', '\n');
             } else {
                 formattedLine = `${name} - %status%`;
             }
@@ -786,13 +776,13 @@ registerPlugin(
             // 0 = online, 1 = away, 2 = offline
             switch (status) {
                 case 0:
-                    formattedLine = formattedLine.replace('%status%', phraseOnline);
+                    formattedLine = formattedLine.replace('%status%', config.pOnline);
                     break;
                 case 1:
-                    formattedLine = formattedLine.replace('%status%', phraseAway);
+                    formattedLine = formattedLine.replace('%status%', config.pAway);
                     break;
                 case 2:
-                    formattedLine = formattedLine.replace('%status%', phraseOffline);
+                    formattedLine = formattedLine.replace('%status%', config.pOffline);
                     break;
             }
 
@@ -810,7 +800,7 @@ registerPlugin(
             staffClients.forEach(staffClient => {
                 const client = backend.getClientByUID(staffClient[0]);
                 if (client !== undefined) {
-                    if (away) {
+                    if (config.away) {
                         if (isAway(client)) {
                             staffAway.push(staffClient);
                         } else {
@@ -853,7 +843,7 @@ registerPlugin(
             let description = '';
             staffGroups.forEach(staffGroup => {
                 let staffClientsToList = '';
-                if (multiple) {
+                if (config.multiple) {
                     staffOnline.forEach(staffClient => {
                         if (staffClient[2].some(group => group.id === staffGroup.id)) {
                             const staffClientFormatted = getFormattedUsername(staffClient);
@@ -900,17 +890,17 @@ registerPlugin(
                 }
 
                 if (staffClientsToList === '') {
-                    if (!emptyGroup) return;
+                    if (!config.emptyGroup) return;
                     description += `${staffGroup.name}\n`;
                     description += emptyGroupText.replace('%lb%', '\n');
                 } else {
-                    if (template) {
-                        description += groupSection
+                    if (config.template) {
+                        description += config.section
                             .replace('%group%', staffGroup.name)
                             .replace('%users%', staffClientsToList.substring(0, staffClientsToList.length - 1))
                             .replace('%lb%', '\n');
                     } else {
-                        description += `${staffGroup.name}\n${staffClientsToList}${separator}\n`;
+                        description += `${staffGroup.name}\n${staffClientsToList}${config.separator}\n`;
                     }
                 }
             });
@@ -932,7 +922,7 @@ registerPlugin(
                 // error prevention that needs feature deactivation
                 if (awayChannel && config.afkChannels === undefined) {
                     log('There were no afk channels set up although the afk channel option is enabled! Deactivating the feature...');
-                    awayChannel = false;
+                    config.awayChannel = false;
                 }
                 if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
                     log("There are no clients whitelisted for the remove command although it's enabled! Deactivating feature...");
@@ -1007,8 +997,12 @@ registerPlugin(
                         updateDescription(staffGroups, channel);
                     }
 
-                    // on afk channel join or leave
-                    if (awayChannel && ((fromChannel !== undefined && config.afkChannels.includes(fromChannel.id())) || (toChannel !== undefined && config.afkChannels.includes(toChannel.id())))) {
+                    // update list on afk channel join/leave if the feature is enabled
+                    if (
+                        config.away &&
+                        config.awayChannel &&
+                        ((fromChannel !== undefined && config.afkChannels.includes(fromChannel.id())) || (toChannel !== undefined && config.afkChannels.includes(toChannel.id())))
+                    ) {
                         updateDescription(staffGroups, channel);
                     }
                 } else {
@@ -1021,46 +1015,46 @@ registerPlugin(
 
             // AFK EVENT
             event.on('clientAway', client => {
-                if (!away) return;
+                if (!config.away) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
             });
 
             // UN-AFK EVENT
             event.on('clientBack', client => {
-                if (!away) return;
+                if (!config.away) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
             });
 
             // MUTE EVENT
             event.on('clientMute', client => {
-                if (!away) return;
-                if (!awayMute) return;
+                if (!config.away) return;
+                if (!config.awayMute) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
             });
 
             // UNMUTE EVENT
             event.on('clientUnmute', client => {
-                if (!away) return;
-                if (!awayMute) return;
+                if (!config.away) return;
+                if (!config.awayMute) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
             });
 
             // DEAF EVENT
             event.on('clientDeaf', client => {
-                if (!away) return;
-                if (!awayDeaf) return;
+                if (!config.away) return;
+                if (!config.awayDeaf) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
             });
 
             // UNDEAF EVENT
             event.on('clientUndeaf', client => {
-                if (!away) return;
-                if (!awayDeaf) return;
+                if (!config.away) return;
+                if (!config.awayDeaf) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
             });
@@ -1097,8 +1091,8 @@ registerPlugin(
                 if (client.isSelf()) return;
                 const message = event.text;
 
-                // db remove command
-                if (message.substring(0, message.length) === dbCommand) {
+                // database drop/remove command
+                if (config.dbRemove && message.substring(0, message.length) === config.dbrCommand) {
                     // check command permission
                     let permission = false;
                     if (dbCommandClients.length > 0 && dbCommandClients.includes(client.uid())) permission = true;
@@ -1119,15 +1113,15 @@ registerPlugin(
                     switch (event.mode) {
                         case 1:
                             // private chat
-                            if (!dbCommandPrivate) return;
+                            if (!config.dbrPrivate) return;
                             break;
                         case 2:
                             // channel chat
-                            if (!dbCommandChannel) return;
+                            if (!config.dbrChannel) return;
                             break;
                         case 3:
                             // server chat
-                            if (!dbCommandServer) return;
+                            if (!config.dbrServer) return;
                             break;
                     }
 
@@ -1150,7 +1144,7 @@ registerPlugin(
                     if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
                     if (commandGroups.length > 0) {
                         for (let group of client.getServerGroups()) {
-                            if (commandGroups.includes(group.id())) {
+                            if (config.rGroups.includes(group.id())) {
                                 permission = true;
                                 break;
                             }
@@ -1165,15 +1159,15 @@ registerPlugin(
                     switch (event.mode) {
                         case 1:
                             // private chat
-                            if (!commandPrivate) return;
+                            if (!config.rPrivate) return;
                             break;
                         case 2:
                             // channel chat
-                            if (!commandChannel) return;
+                            if (!config.rChannel) return;
                             break;
                         case 3:
                             // server chat
-                            if (!commandServer) return;
+                            if (!config.rServer) return;
                             break;
                     }
 
