@@ -12,6 +12,10 @@
 
 ---
 
+If you want to request a script for personal use or if you just have a good idea for another public script, join our [Discord] and talk to one of the *RLNT* members.
+
+---
+
 <br>
 
 <!-- Table of Contents -->
