@@ -978,7 +978,12 @@ registerPlugin(
             // update the description for all currently known staff clients
             updateDescription(staffGroups, channel);
 
-            // MOVE EVENT
+            /**
+             * MOVE EVENT
+             * fired when a client switches channels or joins/leaves the server
+             * check all necessary information here such as if the client is relevant
+             * for the staff list and update the list accordingly
+             */
             event.on('clientMove', event => {
                 const client = event.client;
                 if (client.isSelf()) return;
@@ -988,14 +993,12 @@ registerPlugin(
                 const nick = client.nick();
                 const groups = getStaffGroupsFromClient(client, staffGroups);
 
-                // make sure it's a client that has to be listed
+                // check if it's a relevant client
                 if (groups.length) {
-                    // on connect or disconnect
+                    // update list on server join/leave
                     if (fromChannel === undefined || toChannel === undefined) {
                         // make sure client is stored
                         storeClient(uid, nick, groups);
-
-                        // update the description
                         updateDescription(staffGroups, channel);
                     }
 
@@ -1008,28 +1011,41 @@ registerPlugin(
                         updateDescription(staffGroups, channel);
                     }
                 } else {
-                    // if client has no list group but is in the database, delete them
+                    // if the client is not relevant but still has a database entry, drop them
                     if (removeClient(uid)) {
                         updateDescription(staffGroups, channel);
                     }
                 }
             });
 
-            // AFK EVENT
+            /**
+             * AFK EVENT
+             * fired when a client sets themself to away in TeamSpeak
+             * if the away status is activated, this will update the list
+             */
             event.on('clientAway', client => {
                 if (!config.away) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
-            // UN-AFK EVENT
+            /**
+             * UN-AFK EVENT
+             * fired when a client sets themself to be back in TeamSpeak
+             * if the away status is activated, this will update the list
+             */
             event.on('clientBack', client => {
                 if (!config.away) return;
                 if (client.isSelf()) return;
                 if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
-            // MUTE EVENT
+            /**
+             * MUTE EVENT
+             * fired when a client mutes their microphone in TeamSpeak
+             * this does not include a disabled microphone
+             * if the away status is activated, this will update the list
+             */
             event.on('clientMute', client => {
                 if (!config.away) return;
                 if (!config.awayMute) return;
@@ -1037,7 +1053,11 @@ registerPlugin(
                 if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
-            // UNMUTE EVENT
+            /**
+             * UN-MUTE EVENT
+             * fired when a client unmutes their microphone in TeamSpeak
+             * if the away status is activated, this will update the list
+             */
             event.on('clientUnmute', client => {
                 if (!config.away) return;
                 if (!config.awayMute) return;
@@ -1045,7 +1065,12 @@ registerPlugin(
                 if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
-            // DEAF EVENT
+            /**
+             * DEAF EVENT
+             * fired when a client sets themself to deaf in TeamSpeak
+             * this does not include a disabled speakers
+             * if the away status is activated, this will update the list
+             */
             event.on('clientDeaf', client => {
                 if (!config.away) return;
                 if (!config.awayDeaf) return;
@@ -1053,7 +1078,11 @@ registerPlugin(
                 if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
-            // UNDEAF EVENT
+            /**
+             * UN-DEAF EVENT
+             * fired when a client sets themself to undeaf in TeamSpeak
+             * if the away status is activated, this will update the list
+             */
             event.on('clientUndeaf', client => {
                 if (!config.away) return;
                 if (!config.awayDeaf) return;
@@ -1061,7 +1090,12 @@ registerPlugin(
                 if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
-            // SERVER GROUP ADDED EVENT
+            /**
+             * GROUP-ADDED EVENT
+             * fired when a client is added to a servergroup in TeamSpeak
+             * this won't fire if the client is not visible for the bot
+             * check if the group is relevant, update the client entry in the database and update the list
+             */
             event.on('serverGroupAdded', event => {
                 const client = event.client;
                 if (client.isSelf()) return;
@@ -1071,7 +1105,12 @@ registerPlugin(
                 }
             });
 
-            // SERVER GROUP REMOVE EVENT
+            /**
+             * GROUP-REMOVED EVENT
+             * fired when a client is removed from a servergroup in TeamSpeak
+             * this won't fire if the client is not visible for the bot
+             * check if the group is relevant, update the client entry in the database and update the list
+             */
             event.on('serverGroupRemoved', event => {
                 const client = event.client;
                 if (client.isSelf()) return;
@@ -1087,7 +1126,12 @@ registerPlugin(
                 }
             });
 
-            // CHAT EVENT
+            /**
+             * CHAT EVENT
+             * fired when a client sends a visible message to the bot
+             * mode: 1 - private, 2 - channel, 3 - server
+             * check for command input
+             */
             event.on('chat', event => {
                 const client = event.client;
                 if (client.isSelf()) return;
