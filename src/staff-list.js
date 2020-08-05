@@ -606,8 +606,8 @@ registerPlugin(
 
             config.staffGroups.forEach(group => {
                 if (group.id === undefined || backend.getServerGroupByID(group.id) === undefined) return;
-                if (group.clients === undefined || group.clients.length === 0) group.clients = [];
-                if (group.groups === undefined || group.groups.length === 0) {
+                if (group.clients === undefined || !group.clients.length) group.clients = [];
+                if (group.groups === undefined || !group.groups.length) {
                     group.groups = [group.id];
                 } else {
                     group.groups.filter(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
@@ -920,28 +920,28 @@ registerPlugin(
             if (config.channel === undefined) {
                 log('There was no channel selected to display the staff list! Deactivating script...');
                 return;
-            } else if (config.staffGroups === undefined || config.staffGroups.length === 0) {
+            } else if (!config.staffGroups || !config.staffGroups.length) {
                 log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
                 return;
             } else {
                 // error prevention that needs feature deactivation
-                if (awayChannel && config.afkChannels === undefined) {
+                if (config.away && config.awayChannel && !config.afkChannels) {
                     log('There were no afk channels set up although the afk channel option is enabled! Deactivating the feature...');
                     config.awayChannel = false;
                 }
-                if (removeCommand && commandClients.length === 0 && commandGroups.length === 0) {
+                if (config.remove && !config.rClients.length && !config.rGroups.length) {
                     log("There are no clients whitelisted for the remove command although it's enabled! Deactivating feature...");
-                    removeCommand = false;
-                } else if (removeCommand && !commandServer && !commandChannel && !commandPrivate) {
+                    config.remove = false;
+                } else if (config.remove && !config.rServer && !config.rChannel && !config.rPrivate) {
                     log('There is no text channel selected for the bot to listen to the remove command! Deactivating feature...');
-                    removeCommand = false;
+                    config.remove = false;
                 }
-                if (dbRemoveCommand && dbCommandClients.length === 0 && dbCommandGroups.length === 0) {
+                if (config.dbRemove && !config.dbrClients.length && !config.dbrGroups.length) {
                     log("There are no clients whitelisted for the database remove command although it's enabled! Deactivating feature...");
-                    dbRemoveCommand = false;
-                } else if (dbRemoveCommand && !dbCommandServer && !dbCommandChannel && !dbCommandPrivate) {
+                    config.dbRemove = false;
+                } else if (config.dbRemove && !config.dbrServer && !config.dbrChannel && !config.dbrPrivate) {
                     log('There is no text channel selected for the bot to listen to the database remove command! Deactivating feature...');
-                    dbRemoveCommand = false;
+                    config.dbRemove = false;
                 }
 
                 // start the script
@@ -968,7 +968,7 @@ registerPlugin(
             // store all online listed staff clients
             backend.getClients().forEach(client => {
                 const clientStaffGroups = getStaffGroupsFromClient(client, staffGroups);
-                if (clientStaffGroups.length !== 0) {
+                if (clientStaffGroups.length) {
                     storeClient(client.uid(), client.nick(), clientStaffGroups);
                 } else {
                     removeClient(client.uid());
@@ -992,7 +992,7 @@ registerPlugin(
                 const groups = getStaffGroupsFromClient(client, staffGroups);
 
                 // make sure it's a client that has to be listed
-                if (groups.length !== 0) {
+                if (groups.length) {
                     // on connect or disconnect
                     if (fromChannel === undefined || toChannel === undefined) {
                         // make sure client is stored
@@ -1022,14 +1022,14 @@ registerPlugin(
             event.on('clientAway', client => {
                 if (!config.away) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
             // UN-AFK EVENT
             event.on('clientBack', client => {
                 if (!config.away) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
             // MUTE EVENT
@@ -1037,7 +1037,7 @@ registerPlugin(
                 if (!config.away) return;
                 if (!config.awayMute) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
             // UNMUTE EVENT
@@ -1045,7 +1045,7 @@ registerPlugin(
                 if (!config.away) return;
                 if (!config.awayMute) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
             // DEAF EVENT
@@ -1053,7 +1053,7 @@ registerPlugin(
                 if (!config.away) return;
                 if (!config.awayDeaf) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
             // UNDEAF EVENT
@@ -1061,7 +1061,7 @@ registerPlugin(
                 if (!config.away) return;
                 if (!config.awayDeaf) return;
                 if (client.isSelf()) return;
-                if (getStaffGroupsFromClient(client, staffGroups).length !== 0) updateDescription(staffGroups, channel);
+                if (getStaffGroupsFromClient(client, staffGroups).length) updateDescription(staffGroups, channel);
             });
 
             // SERVER GROUP ADDED EVENT
@@ -1081,7 +1081,7 @@ registerPlugin(
                 if (groupList.includes(event.serverGroup.id())) {
                     const groups = getStaffGroupsFromClient(client, staffGroups);
 
-                    if (groups.length !== 0) {
+                    if (groups.length) {
                         storeClient(client.uid(), client.nick(), groups);
                     } else {
                         removeClient(client.uid());
@@ -1100,10 +1100,10 @@ registerPlugin(
                 if (config.dbRemove && message.substring(0, message.length) === config.dbrCommand) {
                     // check command permission
                     let permission = false;
-                    if (dbCommandClients.length > 0 && dbCommandClients.includes(client.uid())) permission = true;
-                    if (dbCommandGroups.length > 0) {
+                    if (config.dbrClients.length && config.dbrClients.includes(client.uid())) permission = true;
+                    if (config.dbrGroups.length) {
                         for (let group of client.getServerGroups()) {
-                            if (dbCommandGroups.includes(group.id())) {
+                            if (config.dbrGroups.includes(group.id())) {
                                 permission = true;
                                 break;
                             }
@@ -1146,8 +1146,8 @@ registerPlugin(
                 } else if (message.substring(0, message.length) === command) {
                     // check command permission
                     let permission = false;
-                    if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
-                    if (commandGroups.length > 0) {
+                    if (config.rClients.length && config.rClients.includes(client.uid())) permission = true;
+                    if (config.rGroups.length) {
                         for (let group of client.getServerGroups()) {
                             if (config.rGroups.includes(group.id())) {
                                 permission = true;
