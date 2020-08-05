@@ -5,7 +5,28 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
-- /
+## [1.9.0] - 2020-XX-XX
+
+### Added
+- new config options to customize bot messages which are sent to clients when executing commands
+- client UID parser to check if a valid UID is passed to the remove command in order to give the invoker better feedback
+- documentation for events to better unstand the script
+
+### Changed
+- new internal config format applied
+  - script is now more lightweight
+  - changes behaviour how default values are applied to config entries
+- using more ES6 methods for code
+- improved code comments to better understand functionality
+- empty group text now needs group placeholder to display group name ([#27](https://github.com/RLNT/sinus-staff-list/issues/27))
+
+### Removed
+- unnecessary staff list update after caching clients
+
+### Fixed
+- group name format overriding by empty group ([#27](https://github.com/RLNT/sinus-staff-list/issues/27))
+- rare bug where afk channel system threw errors while whole afk system was disabled
+- bot listening for commands although they were disabled in the config
 
 ---
 
