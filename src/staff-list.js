@@ -975,9 +975,6 @@ registerPlugin(
                 }
             });
 
-            // update the cached member list
-            updateStaffClients();
-
             // update the description for all currently known staff clients
             updateDescription(staffGroups, channel);
 
