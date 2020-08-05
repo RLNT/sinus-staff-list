@@ -192,6 +192,72 @@ registerPlugin(
                 ]
             },
             {
+                name: 'commandNoPerm',
+                title: "Permission-Text > Define the text that should be send to the command invoker if they don't have permission to use the command!",
+                type: 'string',
+                placeholder: "You don't have permission to perform this command!",
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandArgument',
+                title: "Missing-Argument-Text > Define the text that should be send to the command invoker if they didn't pass an argument to the command!",
+                type: 'string',
+                placeholder: 'Not enough arguments! You have to add a client UID to the command! Usage: !remove <client UID>',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandInvalid',
+                title: 'Invalid-UID-Text > Define the text that should be send to the command invoker if the argument they entered is not a valid client UID! | placeholders: %arg% - entered argument',
+                type: 'string',
+                placeholder: '"%arg%" is not a valid client UID! Make sure to send the correct one.',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandNotFound',
+                title:
+                    "Not-Found-Text > Define the text that should be send to the command invoker if the target client couldn't be found in the database! | placeholders: %uid% - uid of the target client",
+                type: 'string',
+                placeholder: 'The client (%uid%) was not found in the database! Make sure to send the correct UID.',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'commandSuccess',
+                title: 'Success-Text > Define the text that should be send to the command invoker if the target client was successfully removed! | placeholders: %uid% - uid of the target client',
+                type: 'string',
+                placeholder: 'The client (%uid%) was successfully removed!',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'dbRemoveCommand',
                 title: 'DB-Remove-Command > Do you want a command to remove the whole database of the script? This can be used to reset the script.',
                 type: 'select',
@@ -266,6 +332,46 @@ registerPlugin(
                 conditions: [
                     {
                         field: 'dbRemoveCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandNoPerm',
+                title: "Permission-Text > Define the text that should be send to command invoker if they don't have permission to use the command!",
+                type: 'string',
+                placeholder: "You don't have permission to perform this command!",
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandEmpty',
+                title: 'Empty-Database-Text > Define the text that should be send to the command invoker if database is already empty!',
+                type: 'string',
+                placeholder: 'The database is already empty!',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'dbCommandSuccess',
+                title:
+                    'Success-Text > Define the text that should be send to the command invoker if the database was successfully dropped/removed! | placeholders: %amount% - amount of database removals',
+                type: 'string',
+                placeholder: 'The database was successfully dropped! %amount% entries have been removed.',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'removeCommand',
                         value: 0
                     }
                 ]
@@ -503,6 +609,7 @@ registerPlugin(
         // GLOBAL VARS
         let staffClients = []; // [uid, nickname, [staff groups]]
         let groupList = []; // list of all relevant group IDs
+        const uidPattern = new RegExp('^[a-zA-Z0-9+\\/]{27}=$');
 
         // CONFIG OPTIONS
         const clickable = varDef(config.clickable, 0) == 0;
@@ -1111,7 +1218,8 @@ registerPlugin(
                         }
                     }
                     if (!permission) {
-                        client.chat("You don't have permission to perform this command!");
+                        // tell invoker that they have no permission
+                        client.chat(config.dbrPerm);
                         return;
                     }
 
@@ -1131,7 +1239,7 @@ registerPlugin(
                             break;
                     }
 
-                    // perform the actual command
+                    // perform the actual command, count deletions to give feedback
                     let deleted = 0;
                     store.getKeys().forEach(key => {
                         store.unset(key);
@@ -1139,12 +1247,15 @@ registerPlugin(
                     });
                     updateStaffClients();
                     updateDescription(staffGroups, channel);
-                    if (deleted === 0) {
-                        client.chat('The database is already empty!');
+                    if (!deleted) {
+                        // tell invoker that database is already empty
+                        client.chat(config.dbrEmpty);
                     } else {
-                        client.chat('The database was successfully wiped! ' + deleted + ' entries have been removed.');
+                        // tell invoker that database drop was successful and report amount of removed entries
+                        client.chat(config.dbrSuccess.replace('%amount%', deleted));
                     }
-                } else if (message.substring(0, message.length) === command) {
+                } else if (config.remove && message.substring(0, message.length) === config.rCommand) {
+                    // client remove command
                     // check command permission
                     let permission = false;
                     if (commandClients.length > 0 && commandClients.includes(client.uid())) permission = true;
@@ -1157,7 +1268,8 @@ registerPlugin(
                         }
                     }
                     if (!permission) {
-                        client.chat("You don't have permission to perform this command!");
+                        // tell invoker that they have no permission
+                        client.chat(config.rPerm);
                         return;
                     }
 
@@ -1178,12 +1290,24 @@ registerPlugin(
                     }
 
                     // perform the actual command
-                    const uid = message.substring(command.length, message.length).trim();
+                    const uid = message.substring(config.rCommand.length, message.length).trim();
+                    if (!uid) {
+                        // tell invoker that a uid has to be provided as argument
+                        client.chat(config.rArgument);
+                        return;
+                    }
+                    if (!uid.match(uidPattern)) {
+                        // tell invoker that provided argument is not a valid uid
+                        client.chat(config.rInvalid.replace('%arg%', uid));
+                        return;
+                    }
                     if (removeClient(uid)) {
-                        client.chat('The client was successfully removed!');
+                        // tell invoker that client was successfully removed
+                        client.chat(config.rSuccess.replace('%uid%', uid));
                         updateDescription(staffGroups, channel);
                     } else {
-                        client.chat('The client was not found in the database! Make sure to send the correct UID.');
+                        // tell invoker that provided entry was not found
+                        client.chat(config.rNotFound.replace('%uid%', uid));
                     }
                 }
             });
