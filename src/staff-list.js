@@ -562,6 +562,11 @@ registerPlugin(
         config = Object.assign(config, away, remove, dbRemove, template, emptyGroup);
 
         // FUNCTIONS
+        /**
+         * Send a message to the SinusBot instance log
+         * @param {String} message > the message to send
+         * @returns {void} > nothing
+         */
         function log(message) {
             engine.log('Staff-List > ' + message);
         }
