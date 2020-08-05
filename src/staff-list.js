@@ -647,9 +647,9 @@ registerPlugin(
         /**
          * Store a client to the script's database if they are not already stored;
          * Can also update information if entry is alreadyp present;
-         * @param {String} uid > The UID of the client to store
-         * @param {String} nick > The nickname of the client to store
-         * @param {Array} groups > The relevant staff groups of the client to store
+         * @param {String} uid > the UID of the client to store
+         * @param {String} nick > the nickname of the client to store
+         * @param {Array} groups > the relevant staff groups of the client to store
          * @returns {void} > nothing
          */
         function storeClient(uid, nick, groups) {
@@ -670,8 +670,8 @@ registerPlugin(
         /**
          * Remove a client from the script's database if they are stored;
          * Will give feedback if the entry was removed
-         * @param {String} uid > The UID of the client to remove
-         * @returns {Boolean} > True if the client was removed, False if no entry was found
+         * @param {String} uid > the UID of the client to remove
+         * @returns {Boolean} > true if the client was removed, false if no entry was found
          */
         function removeClient(uid) {
             if (store.getKeys().includes(uid)) {
@@ -701,9 +701,9 @@ registerPlugin(
 
         /**
          * Get the relevant staff groups from a given client
-         * @param {Object} client > The client object to check
-         * @param {Array} staffGroups > The list of all validated staff groups from the config
-         * @returns {Array} > The relevant staff groups of the given client
+         * @param {Object} client > the client object to check
+         * @param {Array} staffGroups > the list of all validated staff groups from the config
+         * @returns {Array} > the relevant staff groups of the given client
          */
         function getStaffGroupsFromClient(client, staffGroups) {
             let clientStaffGroups = [];
@@ -715,9 +715,9 @@ registerPlugin(
 
         /**
          * Check if a client is a valid member of a given staff group from the config
-         * @param {Object} client > The client object to check
-         * @param {Object} staffGroup > The staff group object from the config to check
-         * @returns {Boolean} > True if the client is a valid member, otherwise False
+         * @param {Object} client > the client object to check
+         * @param {Object} staffGroup > the staff group object from the config to check
+         * @returns {Boolean} > true if the client is a valid member, otherwise false
          */
         function isStaffGroupMember(client, staffGroup) {
             if (staffGroup.clients.includes(client.uid())) return true;
@@ -731,8 +731,8 @@ registerPlugin(
 
         /**
          * Check if a client is counted as away/afk by checking different status of them
-         * @param {Object} client > The client object to check
-         * @returns {Boolean} > True if the client is counted as away/afk, otherwise False
+         * @param {Object} client > the client object to check
+         * @returns {Boolean} > true if the client is counted as away/afk, otherwise false
          */
         function isAway(client) {
             return client.isAway() || (config.awayMute && client.isMuted()) || (config.awayDeaf && client.isDeaf()) || (config.awayChannel && isInAfkChannel(client));
@@ -740,8 +740,8 @@ registerPlugin(
 
         /**
          * Check if a client is in any afk channel which is given in the config
-         * @param {Object} client > The client object to check
-         * @returns {Boolean} > True if the client is in any afk channel, otherwise False
+         * @param {Object} client > the client object to check
+         * @returns {Boolean} > true if the client is in any afk channel, otherwise false
          */
         function isInAfkChannel(client) {
             for (let channel of client.getChannels()) {
@@ -753,8 +753,8 @@ registerPlugin(
 
         /**
          * Format a username if the script is configured to make them clickable
-         * @param {Array} staffClient > The staff client array [uid, nickname, [staff groups]]
-         * @returns {String} > The formatted username
+         * @param {Array} staffClient > the staff client array [uid, nickname, [staff groups]]
+         * @returns {String} > the formatted username
          */
         function getFormattedUsername(staffClient) {
             if (config.clickable) {
@@ -766,9 +766,9 @@ registerPlugin(
 
         /**
          * Format a whole line that will be displayed in the list by adding all small parts together
-         * @param {String} name > The formatted username
-         * @param {Number} status > The online status of the client
-         * @returns {String} > The formatted line
+         * @param {String} name > the formatted username
+         * @param {Number} status > the online status of the client
+         * @returns {String} > the formatted line
          */
         function getFormattedUserLine(name, status) {
             let formattedLine = '';
@@ -796,7 +796,7 @@ registerPlugin(
 
         /**
          * Sort all staff clients by their online status and alphabetically
-         * @returns {Array} > The list with all sorted staff clients [online, away, offline]
+         * @returns {Array} > the list with all sorted staff clients [online, away, offline]
          */
         function getSortedStaffList() {
             let staffOnline = [];
@@ -839,8 +839,8 @@ registerPlugin(
 
         /**
          * Update the channel description where the staff list should be shown in
-         * @param {Array} staffGroups > The list of validated staff groups from the config
-         * @param {Object} channel > The channel object to display the staff list in
+         * @param {Array} staffGroups > the list of validated staff groups from the config
+         * @param {Object} channel > the channel object to display the staff list in
          * @returns {void} > nothing
          */
         function updateDescription(staffGroups, channel) {
