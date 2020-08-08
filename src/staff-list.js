@@ -1247,7 +1247,7 @@ registerPlugin(
                     // check command permission
                     let permission = false;
                     if (config.dbrClients.length && config.dbrClients.includes(client.uid())) permission = true;
-                    if (config.dbrGroups.length) {
+                    if (!permission && config.dbrGroups.length) {
                         for (let group of client.getServerGroups()) {
                             if (config.dbrGroups.includes(group.id())) {
                                 permission = true;
@@ -1297,7 +1297,7 @@ registerPlugin(
                     // check command permission
                     let permission = false;
                     if (config.rClients.length && config.rClients.includes(client.uid())) permission = true;
-                    if (config.rGroups.length) {
+                    if (!permission && config.rGroups.length) {
                         for (let group of client.getServerGroups()) {
                             if (config.rGroups.includes(group.id())) {
                                 permission = true;
