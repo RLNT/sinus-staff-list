@@ -1056,7 +1056,9 @@ registerPlugin(
                         main();
                     })
                     .catch(() => {
-                        log("The script couldn't be loaded because the backend was not online in time! Deactivating script...");
+                        log(
+                            'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
+                        );
                     });
             }
         });
