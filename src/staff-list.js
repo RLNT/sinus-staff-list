@@ -711,14 +711,15 @@ registerPlugin(
                         clearInterval(timer);
                         if (config.dev) log('waitForBackend() took ' + attempt + ' attempts with a timer of ' + wait + ' seconds to resolve');
                         success();
-                    }
-                    if (attempt >= attempts) {
+                        return;
+                    } else if (attempt > attempts) {
                         clearInterval(timer);
                         if (config.dev) log('waitForBackend() failed at ' + attempt + '. attempt with a timer of ' + wait + ' seconds');
                         fail();
+                        return;
                     }
 
-                    attempts++;
+                    attempt++;
                 }, wait * 1000);
             });
         }
