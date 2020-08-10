@@ -705,16 +705,16 @@ registerPlugin(
          */
         function waitForBackend(attempts, wait) {
             return new Promise((success, fail) => {
-                let attempt = 0;
+                let attempt = 1;
                 const timer = setInterval(() => {
                     if (backend.isConnected()) {
                         clearInterval(timer);
-                        if (config.dev) log('waitForBackend() took ' + attempt++ + ' attempts with a timer of ' + wait + ' seconds to resolve');
+                        if (config.dev) log('waitForBackend() took ' + attempt + ' attempts with a timer of ' + wait + ' seconds to resolve');
                         success();
                     }
                     if (attempt >= attempts) {
                         clearInterval(timer);
-                        if (config.dev) log('waitForBackend() failed at ' + attempt++ + '. attempt with a timer of ' + wait + ' seconds');
+                        if (config.dev) log('waitForBackend() failed at ' + attempt + '. attempt with a timer of ' + wait + ' seconds');
                         fail();
                     }
 
