@@ -1270,7 +1270,7 @@ registerPlugin(
                 const message = event.text;
 
                 // database drop/remove command
-                if (config.dbRemove && message.substring(0, message.length) === config.dbrCommand) {
+                if (config.dbRemove && message.substring(0, config.dbrCommand.length) === config.dbrCommand) {
                     // check command permission
                     let permission = false;
                     if (config.dbrClients.length && config.dbrClients.includes(client.uid())) permission = true;
@@ -1319,7 +1319,7 @@ registerPlugin(
                         // tell invoker that database drop was successful and report amount of removed entries
                         client.chat(config.dbrSuccess.replace('%amount%', deleted));
                     }
-                } else if (config.remove && message.substring(0, message.length) === config.rCommand) {
+                } else if (config.remove && message.substring(0, config.rCommand.length) === config.rCommand) {
                     // client remove command
                     // check command permission
                     let permission = false;
