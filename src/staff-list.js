@@ -1043,7 +1043,7 @@ registerPlugin(
 
         // LOADING EVENT
         event.on('load', () => {
-            // dev mode config dumb
+            // dev mode config dump
             if (config.dev) console.log(Object.entries(config));
 
             // error prevention that needs script deactivation
