@@ -244,6 +244,77 @@ Please click the option you want to configure to get more information.
     - at least one group must be defined if no client is whitelisted for the command
     - if no clients or groups are whitelisted, the feature will be disabled automatically
     </details>
+    <details>
+        <summary>
+            Permission-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `You don't have permission to perform this command!`
+    - enter the message text
+
+    *Info*:
+    - defines the message that should be send to the command invoker if they don't have the required permission to execute the command
+    - this will be send in a private message
+    </details>
+    <details>
+        <summary>
+            Missing-Argument-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `Not enough arguments! You have to add a client UID to the command! Usage: !remove <client UID>`
+    - enter the message text
+
+    *Info*:
+    - defines the message that should be send to the command invoker if they didn't provide any arguments to the command
+    - this will be send in a private message
+    </details>
+    <details>
+        <summary>
+            Invalid-UID-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `"%arg%" is not a valid client UID! Make sure to send the correct one.`
+    - enter the message text
+    - available placeholders:
+      - %arg% - entered argument
+
+    *Info*:
+    - defines the message that should be send to the command invoker if the provided argument is not a valid client UID
+    - this will be send in a private message
+    </details>
+    <details>
+        <summary>
+            Not-Found-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `The client (%uid%) was not found in the database! Make sure to send the correct UID.`
+    - enter the message text
+    - available placeholders:
+      - %uid% - uid of the target client
+
+    *Info*:
+    - defines the message that should be send to the command invoker if the target client was not found in the database
+    - this will be send in a private message
+    </details>
+    <details>
+        <summary>
+            Success-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `The client (%uid%) was successfully removed!`
+    - enter the message text
+    - available placeholders:
+      - %uid% - uid of the target client
+
+    *Info*:
+    - defines the message that should be send to the command invoker if the target client was successfully removed from the database
+    - this will be send in a private message
+    </details>
 </details>
 <details>
     <summary>
@@ -337,6 +408,47 @@ Please click the option you want to configure to get more information.
     - defines if a group has the permission to use the database remove command
     - at least one group must be defined if no client is whitelisted for the command
     - if no clients or groups are whitelisted, the feature will be disabled automatically
+    </details>
+    <details>
+        <summary>
+            Permission-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `You don't have permission to perform this command!`
+    - enter the message text
+
+    *Info*:
+    - defines the message that should be send to the command invoker if they don't have the required permission to execute the command
+    - this will be send in a private message
+    </details>
+    <details>
+        <summary>
+            Empty-Database-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `The database is already empty!`
+    - enter the message text
+
+    *Info*:
+    - defines the message that should be send to the command invoker if the script database is already empty
+    - this will be send in a private message
+    </details>
+    <details>
+        <summary>
+            Success-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `The database was successfully dropped! %amount% entries have been removed.`
+    - enter the message text
+    - available placeholders:
+      - %amount% - amount of removed entries
+
+    *Info*:
+    - defines the message that should be send to the command invoker if the database was successfully dropped/removed
+    - this will be send in a private message
     </details>
 </details>
 
@@ -585,11 +697,18 @@ There is one last option for *Text & Format* that is not related to the template
         </summary>
 
     *Details*:
-    - optional option | default value: `[COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]`
-    - enter the text that should be displayed if the group is considered empty
+    - optional option | default value: `[COLOR=#aa007f][size=12][B]%name%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]`
+    - enter the empty group format text
+    - available placeholders:
+      - %group% - the formatted group name, you can set this in the staff groups later
+      - %lb% - a linebreak, same like pressing the *Enter-key* in a text file
 
     *Info*:
-    - this is written below the name of the group
+    - this will be the text that is written into the list if the group is considered empty
+    - a group is considered empty if no client is assigned or stored to it
+    - this text is not related to the template option, you have to format it on your own
+    - the name of the group is not displayed automatically, you have to add it with the placeholder
+    - this will let you customize the whole format of the section of the group
     </details>
 </details>
 
