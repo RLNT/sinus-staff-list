@@ -595,6 +595,24 @@ registerPlugin(
                         type: 'strings'
                     }
                 ]
+            },
+            {
+                name: 'spacer3',
+                title: ''
+            },
+            {
+                name: 'header3',
+                title: '->>> Dev Options <<<-'
+            },
+            {
+                name: 'developer',
+                title: "Don't change any of the following values if you have not been told to! This section is to identify problems faster and will drain performance."
+            },
+            {
+                name: 'devEnabled',
+                title: 'Do you want to enable the developer mode?',
+                type: 'select',
+                options: ['Yes', 'No']
             }
         ]
     },
@@ -621,6 +639,7 @@ registerPlugin(
             template: scriptConfig.template == 0 || false,
             emptyGroup: scriptConfig.emptyGroup == 0 || false,
             staffGroups: scriptConfig.staffGroups,
+            dev: scriptConfig.devEnabled == 0 || false
         };
         const away = {
             awayChannel: config.away ? scriptConfig.awayChannel == 0 || false : false,
@@ -690,10 +709,12 @@ registerPlugin(
                 const timer = setInterval(() => {
                     if (backend.isConnected()) {
                         clearInterval(timer);
+                        if (config.dev) log('waitForBackend() took ' + attempt++ + ' attempts with a timer of ' + wait + ' seconds to resolve');
                         success();
                     }
                     if (attempt >= attempts) {
                         clearInterval(timer);
+                        if (config.dev) log('waitForBackend() failed at ' + attempt++ + '. attempt with a timer of ' + wait + ' seconds');
                         fail();
                     }
 
@@ -1022,6 +1043,9 @@ registerPlugin(
 
         // LOADING EVENT
         event.on('load', () => {
+            // dev mode config dumb
+            if (config.dev) console.log(Object.entries(config));
+
             // error prevention that needs script deactivation
             if (config.channel === undefined) {
                 log('There was no channel selected to display the staff list! Deactivating script...');
