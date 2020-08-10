@@ -542,7 +542,7 @@ registerPlugin(
                 name: 'emptyGroupText',
                 title: 'Empty-Groups-Text > Define what the text of an empty group should look like! | placeholders: %group% - formatted group name, %lb% - line break',
                 type: 'multiline',
-                placeholder: '[COLOR=#aa007f][size=12][B]%name%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]',
+                placeholder: '[COLOR=#aa007f][size=12][B]%group%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]',
                 indent: 2,
                 conditions: [
                     {
@@ -681,7 +681,7 @@ registerPlugin(
             separator: config.template ? undefined : scriptConfig.separator || '_______________________________________'
         };
         const emptyGroup = {
-            emptyText: config.emptyGroup ? scriptConfig.emptyGroupText || '[COLOR=#aa007f][size=12][B]%name%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]' : undefined
+            emptyText: config.emptyGroup ? scriptConfig.emptyGroupText || '[COLOR=#aa007f][size=12][B]%group%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]' : undefined
         };
 
         // merge configs into one object
