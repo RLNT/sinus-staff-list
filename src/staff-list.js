@@ -692,7 +692,7 @@ registerPlugin(
                         clearInterval(timer);
                         success();
                     }
-                    if (attempt === attempts) {
+                    if (attempt >= attempts) {
                         clearInterval(timer);
                         fail();
                     }
