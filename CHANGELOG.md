@@ -5,12 +5,19 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
-## [1.9.0] - 2020-XX-XX
+- /
+
+---
+
+## [Released]
+
+## [1.9.0] - 2020-08-10
 
 ### Added
 - new config options to customize bot messages which are sent to clients when executing commands
 - client UID parser to check if a valid UID is passed to the remove command in order to give the invoker better feedback
 - documentation for events to better unstand the script
+- dev mode to find issues more easily
 
 ### Changed
 - new internal config format applied
@@ -28,9 +35,6 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 - rare bug where afk channel system threw errors while whole afk system was disabled
 - bot listening for commands although they were disabled in the config
 
----
-
-## [Released]
 
 ## [1.8.0] - 2020-08-03
 
@@ -121,6 +125,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.9.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.8.0..v1.9.0
 [1.8.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.5.0..v1.8.0
 [1.5.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.3.0..v1.5.0
 [1.3.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.2.0..v1.3.0
