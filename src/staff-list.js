@@ -9,7 +9,7 @@
 registerPlugin(
     {
         name: 'Staff List',
-        version: '1.9.0',
+        version: '1.9.1',
         description: 'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
         backends: ['ts3'],
@@ -705,20 +705,21 @@ registerPlugin(
          */
         function waitForBackend(attempts, wait) {
             return new Promise((success, fail) => {
-                let attempt = 0;
+                let attempt = 1;
                 const timer = setInterval(() => {
                     if (backend.isConnected()) {
                         clearInterval(timer);
-                        if (config.dev) log('waitForBackend() took ' + attempt++ + ' attempts with a timer of ' + wait + ' seconds to resolve');
+                        if (config.dev) log('waitForBackend() took ' + attempt + ' attempts with a timer of ' + wait + ' seconds to resolve');
                         success();
-                    }
-                    if (attempt >= attempts) {
+                        return;
+                    } else if (attempt > attempts) {
                         clearInterval(timer);
-                        if (config.dev) log('waitForBackend() failed at ' + attempt++ + '. attempt with a timer of ' + wait + ' seconds');
+                        if (config.dev) log('waitForBackend() failed at ' + attempt + '. attempt with a timer of ' + wait + ' seconds');
                         fail();
+                        return;
                     }
 
-                    attempts++;
+                    attempt++;
                 }, wait * 1000);
             });
         }
@@ -1043,7 +1044,7 @@ registerPlugin(
 
         // LOADING EVENT
         event.on('load', () => {
-            // dev mode config dumb
+            // dev mode config dump
             if (config.dev) console.log(Object.entries(config));
 
             // error prevention that needs script deactivation

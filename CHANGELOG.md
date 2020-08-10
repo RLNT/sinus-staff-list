@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.9.1] - 2020-08-11
+
+### Fixed
+- bot throwing errors that it can't connect to the backend in time although it was already connected
+
+
 ## [1.9.0] - 2020-08-10
 
 ### Added
@@ -125,6 +131,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.9.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.0..v1.9.1
 [1.9.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.8.0..v1.9.0
 [1.8.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.5.0..v1.8.0
 [1.5.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.3.0..v1.5.0
