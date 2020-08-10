@@ -665,6 +665,7 @@ registerPlugin(
             emptyText: config.emptyGroup ? scriptConfig.emptyGroupText || '[COLOR=#aa007f][size=12][B]%name%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]' : undefined
         };
 
+        // merge configs into one object
         config = Object.assign(config, away, remove, dbRemove, template, emptyGroup);
 
         // FUNCTIONS
