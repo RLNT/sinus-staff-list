@@ -613,17 +613,17 @@ registerPlugin(
         // CONFIG OPTIONS
         let config = {
             channel: scriptConfig.channel,
-            clickable: scriptConfig.clickable === 0 || true,
-            multiple: scriptConfig.multiple === 0 || false,
-            away: scriptConfig.away === 0 || false,
-            remove: scriptConfig.removeCommand === 0 || false,
-            dbRemove: scriptConfig.dbRemoveCommand === 0 || false,
-            template: scriptConfig.template === 0 || false,
-            emptyGroup: scriptConfig.emptyGroup === 0 || false,
-            staffGroups: scriptConfig.staffGroups
+            clickable: scriptConfig.clickable == 0 || true,
+            multiple: scriptConfig.multiple == 0 || false,
+            away: scriptConfig.away == 0 || false,
+            remove: scriptConfig.removeCommand == 0 || false,
+            dbRemove: scriptConfig.dbRemoveCommand == 0 || false,
+            template: scriptConfig.template == 0 || false,
+            emptyGroup: scriptConfig.emptyGroup == 0 || false,
+            staffGroups: scriptConfig.staffGroups,
         };
         const away = {
-            awayChannel: config.away ? scriptConfig.awayChannel === 0 || false : false,
+            awayChannel: config.away ? scriptConfig.awayChannel == 0 || false : false,
             awayMute: config.away ? scriptConfig.awayMute === true || false : false,
             awayDeaf: config.away ? scriptConfig.awayDeaf === true || false : false,
             afkChannels: config.away ? scriptConfig.afkChannels : undefined
