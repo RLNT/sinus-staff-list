@@ -766,14 +766,17 @@ registerPlugin(
          */
         function validateDatabase() {
             store.getKeys().forEach(key => {
-                // delete entries from database which do not contain group objects
+                // delete entries from database which do not have the correct format
                 if (Array.isArray(store.get(key)[1])) {
-                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) removeClient(key);
+                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) {
+                        removeClient(key);
+                    } else {
+                        // remove all clients from database who do not have a relevant group
+                        if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
+                    }
                 } else {
-                    if (typeof store.get(key)[1] !== 'object') removeClient(key);
+                    removeClient(key);
                 }
-                // remove all clients from database who do not have a relevant group
-                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
             });
         }
 
