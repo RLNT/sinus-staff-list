@@ -11,13 +11,34 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.9.2] - 2020-08-25
+
+### Notes
+- thanks a lot to GogadonLive for reporting these issues and for helping a lot with testing.
+- if you update to any version that starts with 1.9 from an older script version, many of your database entries will be dropped since the database requires a new formatting because of new script features
+
+### Added
+- proper handling of errors
+- reporting of errors to the log
+
+### Fixed
+- backend handling unknown errors from the script
+- database validation when updating from an old script version
+
+
 ## [1.9.1] - 2020-08-11
+
+### Notes
+- if you update to any version that starts with 1.9 from an older script version, many of your database entries will be dropped since the database requires a new formatting because of new script features
 
 ### Fixed
 - bot throwing errors that it can't connect to the backend in time although it was already connected
 
 
 ## [1.9.0] - 2020-08-10
+
+### Notes
+- if you update to any version that starts with 1.9 from an older script version, many of your database entries will be dropped since the database requires a new formatting because of new script features
 
 ### Added
 - new config options to customize bot messages which are sent to clients when executing commands
@@ -131,6 +152,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.9.2]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.1..v1.9.2
 [1.9.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.0..v1.9.1
 [1.9.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.8.0..v1.9.0
 [1.8.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.5.0..v1.8.0
