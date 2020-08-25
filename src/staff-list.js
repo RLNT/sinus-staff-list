@@ -9,7 +9,7 @@
 registerPlugin(
     {
         name: 'Staff List',
-        version: '1.9.1',
+        version: '1.9.2',
         description: 'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
         backends: ['ts3'],
@@ -715,7 +715,11 @@ registerPlugin(
                     } else if (attempt > attempts) {
                         clearInterval(timer);
                         if (config.dev) log('waitForBackend() failed at ' + attempt + '. attempt with a timer of ' + wait + ' seconds');
-                        fail();
+                        fail(
+                            new Error(
+                                'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
+                            )
+                        );
                         return;
                     }
 
@@ -762,14 +766,17 @@ registerPlugin(
          */
         function validateDatabase() {
             store.getKeys().forEach(key => {
-                // delete entries from database which do not contain group objects
+                // delete entries from database which do not have the correct format
                 if (Array.isArray(store.get(key)[1])) {
-                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) removeClient(key);
+                    if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) {
+                        removeClient(key);
+                    } else {
+                        // remove all clients from database who do not have a relevant group
+                        if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
+                    }
                 } else {
-                    if (typeof store.get(key)[1] !== 'object') removeClient(key);
+                    removeClient(key);
                 }
-                // remove all clients from database who do not have a relevant group
-                if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
             });
         }
 
@@ -1081,10 +1088,13 @@ registerPlugin(
                         log('The script has loaded successfully!');
                         main();
                     })
-                    .catch(() => {
-                        log(
-                            'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
-                        );
+                    .catch(error => {
+                        if (error.message === '') {
+                            log(error.message);
+                        } else {
+                            log('Unknown error occured! Please report this to the script author: https://discord.com/invite/Q3qxws6');
+                            log(error.stack);
+                        }
                     });
             }
         });
