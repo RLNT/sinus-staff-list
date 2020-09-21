@@ -1089,6 +1089,10 @@ registerPlugin(
                 }
             });
 
+            // apply header and footer static texts if activated
+            if (config.header) description = config.headerText + description;
+            if (config.footer) description += config.footerText;
+
             // set new description to channel
             channel.setDescription(description);
         }
