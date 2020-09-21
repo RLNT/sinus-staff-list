@@ -676,6 +676,8 @@ registerPlugin(
             dbRemove: scriptConfig.dbRemoveCommand == 0 || false,
             template: scriptConfig.template == 0 || false,
             emptyGroup: scriptConfig.emptyGroup == 0 || false,
+            header: scriptConfig.header == 0 || false,
+            footer: scriptConfig.footer == 0 || false,
             staffGroups: scriptConfig.staffGroups,
             dev: scriptConfig.devEnabled == 0 || false
         };
@@ -721,9 +723,13 @@ registerPlugin(
         const emptyGroup = {
             emptyText: config.emptyGroup ? scriptConfig.emptyGroupText || '[COLOR=#aa007f][size=12][B]%group%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]' : undefined
         };
+        const staticText = {
+            headerText: config.header ? scriptConfig.headerText || 'This is the staff list of the server!\nYou can see if a specific team member is online, afk or offline.' : undefined,
+            footerText: config.footer ? scriptConfig.footerText || 'Have fun on our server!' : undefined
+        };
 
         // merge configs into one object
-        config = Object.assign(config, away, remove, dbRemove, template, emptyGroup);
+        config = Object.assign(config, away, remove, dbRemove, template, emptyGroup, staticText);
 
         // FUNCTIONS
         /**
