@@ -552,6 +552,44 @@ registerPlugin(
                 ]
             },
             {
+                name: 'header',
+                title: "Header > Do you want to display a header above the staff list? This will be static static text and won't be changed on a list update.",
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'headerText',
+                title: 'Header-Text > Define what the text of the header above the staff list should be! | placeholders: %lb% - line break',
+                type: 'multiline',
+                placeholder: 'This is the staff list of the server!\nYou can see if a specific team member is online, afk or offline.',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'header',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'footer',
+                title: "Footer > Do you want to display a footer underneath the staff list? This will be static static text and won't be changed on a list update.",
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'footerText',
+                title: 'Footer-Text > Define what the text of the footer underneath the staff list should be! | placeholders: %lb% - line break',
+                type: 'multiline',
+                placeholder: 'Have fun on our server!',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'footer',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer2',
                 title: ''
             },
@@ -638,6 +676,8 @@ registerPlugin(
             dbRemove: scriptConfig.dbRemoveCommand == 0 || false,
             template: scriptConfig.template == 0 || false,
             emptyGroup: scriptConfig.emptyGroup == 0 || false,
+            header: scriptConfig.header == 0 || false,
+            footer: scriptConfig.footer == 0 || false,
             staffGroups: scriptConfig.staffGroups,
             dev: scriptConfig.devEnabled == 0 || false
         };
@@ -683,9 +723,13 @@ registerPlugin(
         const emptyGroup = {
             emptyText: config.emptyGroup ? scriptConfig.emptyGroupText || '[COLOR=#aa007f][size=12][B]%group%[/B][/size]\n[/COLOR][COLOR=#c8c8c8][B]NOT ASSIGNED[/B][/COLOR]' : undefined
         };
+        const staticText = {
+            headerText: config.header ? scriptConfig.headerText || 'This is the staff list of the server!\nYou can see if a specific team member is online, afk or offline.' : undefined,
+            footerText: config.footer ? scriptConfig.footerText || 'Have fun on our server!' : undefined
+        };
 
         // merge configs into one object
-        config = Object.assign(config, away, remove, dbRemove, template, emptyGroup);
+        config = Object.assign(config, away, remove, dbRemove, template, emptyGroup, staticText);
 
         // FUNCTIONS
         /**
@@ -1044,6 +1088,10 @@ registerPlugin(
                     }
                 }
             });
+
+            // apply header and footer static texts if activated
+            if (config.header) description = config.headerText + description;
+            if (config.footer) description += config.footerText;
 
             // set new description to channel
             channel.setDescription(description);
