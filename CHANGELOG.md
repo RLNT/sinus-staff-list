@@ -11,6 +11,17 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.10.0] - 2020-09-21
+
+### Added
+- new static text features ([#37](https://github.com/RLNT/sinus-staff-list/issues/37))
+  - header as text above the staff list
+  - footer as text underneath the staff list
+
+### Fixed
+- formatting of a config option from earlier versions
+
+
 ## [1.9.2] - 2020-08-25
 
 ### Notes
@@ -152,6 +163,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.10.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.2..v1.10.0
 [1.9.2]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.1..v1.9.2
 [1.9.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.0..v1.9.1
 [1.9.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.8.0..v1.9.0
