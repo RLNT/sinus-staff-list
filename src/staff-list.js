@@ -552,6 +552,44 @@ registerPlugin(
                 ]
             },
             {
+                name: 'header',
+                title: "Header > Do you want to display a header above the staff list? This will be static static text and won't be changed on a list update.",
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'headerText',
+                title: 'Header-Text > Define what the text of the header above the staff list should be! | placeholders: %lb% - line break',
+                type: 'multiline',
+                placeholder: 'This is the staff list of the server!\nYou can see if a specific team member is online, afk or offline.',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'header',
+                        value: 0
+                    }
+                ]
+            },
+            {
+                name: 'footer',
+                title: "Footer > Do you want to display a footer underneath the staff list? This will be static static text and won't be changed on a list update.",
+                type: 'select',
+                options: ['Yes', 'No']
+            },
+            {
+                name: 'footerText',
+                title: 'Footer-Text > Define what the text of the footer underneath the staff list should be! | placeholders: %lb% - line break',
+                type: 'multiline',
+                placeholder: 'Have fun on our server!',
+                indent: 1,
+                conditions: [
+                    {
+                        field: 'footer',
+                        value: 0
+                    }
+                ]
+            },
+            {
                 name: 'spacer2',
                 title: ''
             },
