@@ -673,7 +673,7 @@ All texts you can edit support BB code formatting, that's the same formatting st
     </details>
 </details>
 
-There is one last option for *Text & Format* that is not related to the template option.
+There are three more options for *Text & Format* that are not related to the template option.
 
 <details>
     <summary>
@@ -709,6 +709,76 @@ There is one last option for *Text & Format* that is not related to the template
     - this text is not related to the template option, you have to format it on your own
     - the name of the group is not displayed automatically, you have to add it with the placeholder
     - this will let you customize the whole format of the section of the group
+    </details>
+</details>
+
+<details>
+    <summary>
+        Header
+    </summary>
+
+*Details*:
+- optional option | default value: `No`
+- select `Yes` or `No`
+
+*Info*:
+- defines whether a header should be shown above the staff list
+- this text is static and won't be updated when the staff list is refreshed by the script
+- you can place normal channel info here that is not messed up by the script
+
+*Advanced Options*:
+- the following option is only shown if you selected `Yes` for the *Header*
+
+    <details>
+        <summary>
+            Header-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `This is the staff list of the server!\nYou can see if a specific team member is online, afk or offline.`
+    - enter the header text
+    - available placeholders:
+      - %lb% - a linebreak, same like pressing the *Enter-key* in a text file
+
+    *Info*:
+    - this will be the text that is written above the staff list
+    - this text is not related to the template option, you have to format it on your own
+    - there is no automatic linebreak at the end of the header to make it as customizable as possible
+    </details>
+</details>
+
+<details>
+    <summary>
+        Footer
+    </summary>
+
+*Details*:
+- optional option | default value: `No`
+- select `Yes` or `No`
+
+*Info*:
+- defines whether a footer should be shown underneath the staff list
+- this text is static and won't be updated when the staff list is refreshed by the script
+- you can place normal channel info here that is not messed up by the script
+
+*Advanced Options*:
+- the following option is only shown if you selected `Yes` for the *Footer*
+
+    <details>
+        <summary>
+            Footer-Text
+        </summary>
+
+    *Details*:
+    - optional option | default value: `Have fun on our server!`
+    - enter the footer text
+    - available placeholders:
+      - %lb% - a linebreak, same like pressing the *Enter-key* in a text file
+
+    *Info*:
+    - this will be the text that is written underneath the staff list
+    - this text is not related to the template option, you have to format it on your own
+    - there is no automatic linebreak at the beginning of the footer to make it as customizable as possible
     </details>
 </details>
 
