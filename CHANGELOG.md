@@ -11,6 +11,16 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.10.1] - 2020-09-22
+
+### Changed
+- configuration options now request client UIDs as intended
+
+### Fixed
+- backend error handling
+- linebreaks not working in static texts
+
+
 ## [1.10.0] - 2020-09-21
 
 ### Added
@@ -163,6 +173,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.10.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.10.0..v1.10.1
 [1.10.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.2..v1.10.0
 [1.9.2]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.1..v1.9.2
 [1.9.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.0..v1.9.1

@@ -9,7 +9,7 @@
 registerPlugin(
     {
         name: 'Staff List',
-        version: '1.10.0',
+        version: '1.10.1',
         description: 'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
         backends: ['ts3'],
@@ -168,7 +168,7 @@ registerPlugin(
             },
             {
                 name: 'commandClients',
-                title: 'Clients > Define the list of client IDs that should be allowed to use the command! [*]',
+                title: 'Clients > Define the list of client UIDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -313,7 +313,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandClients',
-                title: 'Clients > Define the list of client IDs that should be allowed to use the command! [*]',
+                title: 'Clients > Define the list of client UIDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -622,7 +622,7 @@ registerPlugin(
                     },
                     {
                         name: 'clients',
-                        title: 'Clients > Define the list of additional client IDs that should also count towards this staff group!',
+                        title: 'Clients > Define the list of additional client UIDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     },
@@ -759,11 +759,7 @@ registerPlugin(
                     } else if (attempt > attempts) {
                         clearInterval(timer);
                         if (config.dev) log('waitForBackend() failed at ' + attempt + '. attempt with a timer of ' + wait + ' seconds');
-                        fail(
-                            new Error(
-                                'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
-                            )
-                        );
+                        fail('backend');
                         return;
                     }
 
@@ -1090,8 +1086,8 @@ registerPlugin(
             });
 
             // apply header and footer static texts if activated
-            if (config.header) description = config.headerText + description;
-            if (config.footer) description += config.footerText;
+            if (config.header) description = config.headerText.replace('%lb%', '\n') + description;
+            if (config.footer) description += config.footerText.replace('%lb%', '\n');
 
             // set new description to channel
             channel.setDescription(description);
@@ -1137,11 +1133,13 @@ registerPlugin(
                         main();
                     })
                     .catch(error => {
-                        if (error.message === '') {
-                            log(error.message);
+                        if (error === 'backend') {
+                            log(
+                                'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
+                            );
                         } else {
                             log('Unknown error occured! Please report this to the script author: https://discord.com/invite/Q3qxws6');
-                            log(error.stack);
+                            console.log(error);
                         }
                     });
             }
