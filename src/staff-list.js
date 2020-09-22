@@ -168,7 +168,7 @@ registerPlugin(
             },
             {
                 name: 'commandClients',
-                title: 'Clients > Define the list of client IDs that should be allowed to use the command! [*]',
+                title: 'Clients > Define the list of client UIDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -313,7 +313,7 @@ registerPlugin(
             },
             {
                 name: 'dbCommandClients',
-                title: 'Clients > Define the list of client IDs that should be allowed to use the command! [*]',
+                title: 'Clients > Define the list of client UIDs that should be allowed to use the command! [*]',
                 type: 'strings',
                 indent: 1,
                 conditions: [
@@ -622,7 +622,7 @@ registerPlugin(
                     },
                     {
                         name: 'clients',
-                        title: 'Clients > Define the list of additional client IDs that should also count towards this staff group!',
+                        title: 'Clients > Define the list of additional client UIDs that should also count towards this staff group!',
                         indent: 2,
                         type: 'strings'
                     },
