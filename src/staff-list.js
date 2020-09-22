@@ -759,11 +759,7 @@ registerPlugin(
                     } else if (attempt > attempts) {
                         clearInterval(timer);
                         if (config.dev) log('waitForBackend() failed at ' + attempt + '. attempt with a timer of ' + wait + ' seconds');
-                        fail(
-                            new Error(
-                                'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
-                            )
-                        );
+                        fail('backend');
                         return;
                     }
 
@@ -1137,11 +1133,13 @@ registerPlugin(
                         main();
                     })
                     .catch(error => {
-                        if (error.message === '') {
-                            log(error.message);
+                        if (error === 'backend') {
+                            log(
+                                'The bot was not able to connect to the backend in time! To use this script, the bot needs to be connected to your TeamSpeak server. Make sure it can connect. Deactivating script...'
+                            );
                         } else {
                             log('Unknown error occured! Please report this to the script author: https://discord.com/invite/Q3qxws6');
-                            log(error.stack);
+                            console.log(error);
                         }
                     });
             }
