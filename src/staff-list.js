@@ -1086,8 +1086,8 @@ registerPlugin(
             });
 
             // apply header and footer static texts if activated
-            if (config.header) description = config.headerText + description;
-            if (config.footer) description += config.footerText;
+            if (config.header) description = config.headerText.replace('%lb%', '\n') + description;
+            if (config.footer) description += config.footerText.replace('%lb%', '\n');
 
             // set new description to channel
             channel.setDescription(description);
