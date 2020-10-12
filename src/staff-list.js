@@ -1166,6 +1166,12 @@ registerPlugin(
             const staffGroups = validateStaffGroups();
             const channel = backend.getChannelByID(config.channel);
 
+            // exit the script if no valid staff groups were found
+            if (!staffGroups.length)
+                return log(
+                    'There are no valid staff groups set in your script configuration! Make sure that all group IDs point to a valid group and the bot has enough permissions. Deactivating script...'
+                );
+
             // validate database
             validateDatabase();
 
