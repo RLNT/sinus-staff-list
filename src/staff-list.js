@@ -1105,7 +1105,10 @@ registerPlugin(
         // LOADING EVENT
         event.on('load', () => {
             // dev mode config dump
-            if (config.dev) console.log(Object.entries(config));
+            if (config.dev) {
+                console.log('Script-Config:', Object.entries(scriptConfig));
+                console.log('Validated-Config:', Object.entries(config));
+            }
 
             // error prevention that needs script deactivation
             if (!engine.version().includes('1.0.0')) {
@@ -1171,6 +1174,9 @@ registerPlugin(
                 return log(
                     'There are no valid staff groups set in your script configuration! Make sure that all group IDs point to a valid group and the bot has enough permissions. Deactivating script...'
                 );
+
+            // validated groups config dump
+            if (config.dev) console.log('staffGroups:', Object.entries(staffGroups));
 
             // validate database
             validateDatabase();
