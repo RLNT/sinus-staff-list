@@ -776,9 +776,11 @@ registerPlugin(
          */
         function validateStaffGroups() {
             let staffGroups = [];
+            let problemGroups = [];
 
             config.staffGroups.forEach(group => {
-                if (group.id === undefined || backend.getServerGroupByID(group.id) === undefined) return;
+                if (group.id === undefined) return;
+                if (backend.getServerGroupByID(group.id) === undefined) return problemGroups.push(group.id);
                 if (group.clients === undefined || !group.clients.length) group.clients = [];
                 if (group.groups === undefined || !group.groups.length) {
                     group.groups = [group.id];
@@ -793,6 +795,13 @@ registerPlugin(
                 groupList = groupList.concat(group.groups);
                 staffGroups.push(group);
             });
+
+            // notify the script user that there are invalid groups in the configuration
+            if (staffGroups.length && problemGroups.length)
+                log(
+                    'There was at least one group found in your configuration which does not point to a valid group on your TeamSpeak server! They will be ignored. Problematic groups: ' +
+                        problemGroups
+                );
 
             return staffGroups;
         }
