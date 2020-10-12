@@ -11,6 +11,15 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.10.2] - 2020-10-12
+
+### Added
+- feedback for invalid groups in the configuration
+- script cancellation if no groups are valid
+- checking for incompatible SinusBot versions
+- more output to dev mode to find issues faster
+
+
 ## [1.10.1] - 2020-09-22
 
 ### Changed
@@ -173,6 +182,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.10.2]: https://github.com/RLNT/sinus-staff-list/compare/v1.10.1..v1.10.2
 [1.10.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.10.0..v1.10.1
 [1.10.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.2..v1.10.0
 [1.9.2]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.1..v1.9.2

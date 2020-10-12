@@ -9,7 +9,7 @@
 registerPlugin(
     {
         name: 'Staff List',
-        version: '1.10.1',
+        version: '1.10.2',
         description: 'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
         backends: ['ts3'],
@@ -776,9 +776,11 @@ registerPlugin(
          */
         function validateStaffGroups() {
             let staffGroups = [];
+            let problemGroups = [];
 
             config.staffGroups.forEach(group => {
-                if (group.id === undefined || backend.getServerGroupByID(group.id) === undefined) return;
+                if (group.id === undefined) return;
+                if (backend.getServerGroupByID(group.id) === undefined) return problemGroups.push(group.id);
                 if (group.clients === undefined || !group.clients.length) group.clients = [];
                 if (group.groups === undefined || !group.groups.length) {
                     group.groups = [group.id];
@@ -793,6 +795,13 @@ registerPlugin(
                 groupList = groupList.concat(group.groups);
                 staffGroups.push(group);
             });
+
+            // notify the script user that there are invalid groups in the configuration
+            if (staffGroups.length && problemGroups.length)
+                log(
+                    'There was at least one group found in your configuration which does not point to a valid group on your TeamSpeak server! They will be ignored. Problematic groups: ' +
+                        problemGroups
+                );
 
             return staffGroups;
         }
@@ -1096,15 +1105,24 @@ registerPlugin(
         // LOADING EVENT
         event.on('load', () => {
             // dev mode config dump
-            if (config.dev) console.log(Object.entries(config));
+            if (config.dev) {
+                console.log('Script-Config:', Object.entries(scriptConfig));
+                console.log('Validated-Config:', Object.entries(config));
+            }
 
             // error prevention that needs script deactivation
-            if (config.channel === undefined) {
-                log('There was no channel selected to display the staff list! Deactivating script...');
-                return;
+            if (!engine.version().includes('1.0.0')) {
+                return log(
+                    'This script is only compatible with SinusBot 1.0.0 and above! Please upgrade to the latest version. | Linux: https://forum.sinusbot.com/resources/internal-linux-beta.1/ | Windows: https://forum.sinusbot.com/resources/internal-windows-beta-64bit.150/'
+                );
+            } else if (engine.version().toLowerCase().includes('alpha')) {
+                return log(
+                    'This script is not compatible with the alpha version of the SinusBot! Please upgrade to the beta version. | Linux: https://forum.sinusbot.com/resources/internal-linux-beta.1/ | Windows: https://forum.sinusbot.com/resources/internal-windows-beta-64bit.150/'
+                );
+            } else if (config.channel === undefined) {
+                return log('There was no channel selected to display the staff list! Deactivating script...');
             } else if (!config.staffGroups || !config.staffGroups.length) {
-                log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
-                return;
+                return log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
             } else {
                 // error prevention that needs feature deactivation
                 if (config.away && config.awayChannel && !config.afkChannels) {
@@ -1150,6 +1168,15 @@ registerPlugin(
             // VARIABLES
             const staffGroups = validateStaffGroups();
             const channel = backend.getChannelByID(config.channel);
+
+            // exit the script if no valid staff groups were found
+            if (!staffGroups.length)
+                return log(
+                    'There are no valid staff groups set in your script configuration! Make sure that all group IDs point to a valid group and the bot has enough permissions. Deactivating script...'
+                );
+
+            // validated groups config dump
+            if (config.dev) console.log('staffGroups:', Object.entries(staffGroups));
 
             // validate database
             validateDatabase();
