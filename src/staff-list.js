@@ -1108,12 +1108,18 @@ registerPlugin(
             if (config.dev) console.log(Object.entries(config));
 
             // error prevention that needs script deactivation
-            if (config.channel === undefined) {
-                log('There was no channel selected to display the staff list! Deactivating script...');
-                return;
+            if (!engine.version().includes('1.0.0')) {
+                return log(
+                    'This script is only compatible with SinusBot 1.0.0 and above! Please upgrade to the latest version. | Linux: https://forum.sinusbot.com/resources/internal-linux-beta.1/ | Windows: https://forum.sinusbot.com/resources/internal-windows-beta-64bit.150/'
+                );
+            } else if (engine.version().toLowerCase().includes('alpha')) {
+                return log(
+                    'This script is not compatible with the alpha version of the SinusBot! Please upgrade to the beta version. | Linux: https://forum.sinusbot.com/resources/internal-linux-beta.1/ | Windows: https://forum.sinusbot.com/resources/internal-windows-beta-64bit.150/'
+                );
+            } else if (config.channel === undefined) {
+                return log('There was no channel selected to display the staff list! Deactivating script...');
             } else if (!config.staffGroups || !config.staffGroups.length) {
-                log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
-                return;
+                return log('There are no staff groups configured to be displayed in the staff list! Deactivating script...');
             } else {
                 // error prevention that needs feature deactivation
                 if (config.away && config.awayChannel && !config.afkChannels) {
