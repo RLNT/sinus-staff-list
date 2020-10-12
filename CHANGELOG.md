@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 - feedback for invalid groups in the configuration
 - script cancellation if no groups are valid
 - checking for incompatible SinusBot versions
+- more output to dev mode to find issues faster
 
 
 ## [1.10.1] - 2020-09-22
