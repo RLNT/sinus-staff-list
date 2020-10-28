@@ -1,12 +1,16 @@
+# An action to let dependency pull requests pass so Dependabot can merge automatically.
 name: CI
+
 on:
-  pull_request:
-    branches: [ master ]
+    pull_request:
+        types: [labeled]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Pass it
-        run: echo Just let this pass!
+    build:
+        if: ${{ github.event.label.name == 'type > dependency' }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Pass it
+              run: echo Just let this pass!
