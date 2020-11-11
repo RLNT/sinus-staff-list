@@ -11,6 +11,13 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.10.3] - 2020-11-11
+
+### Fixed
+- additional group filtering
+- group validation error handling
+
+
 ## [1.10.2] - 2020-10-12
 
 ### Added
@@ -182,6 +189,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/RLNT/sinus-staff-list/compare/v1.0.0...HEAD
 [Released]: https://github.com/RLNT/sinus-staff-list/releases
+[1.10.3]: https://github.com/RLNT/sinus-staff-list/compare/v1.10.2..v1.10.3
 [1.10.2]: https://github.com/RLNT/sinus-staff-list/compare/v1.10.1..v1.10.2
 [1.10.1]: https://github.com/RLNT/sinus-staff-list/compare/v1.10.0..v1.10.1
 [1.10.0]: https://github.com/RLNT/sinus-staff-list/compare/v1.9.2..v1.10.0
