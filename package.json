@@ -6,12 +6,11 @@
   "author": "RLNT",
   "main": "",
   "scripts": {},
-  "dependencies": {
-    "sinusbot-scripting-engine": "^1.0.18"
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^7.13.0",
     "prettier": "^2.1.2",
-    "prettier-plugin-package": "^1.3.0"
+    "prettier-plugin-package": "^1.2.0",
+    "sinusbot-scripting-engine": "^1.0.18"
   }
 }

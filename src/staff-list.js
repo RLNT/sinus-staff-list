@@ -778,28 +778,34 @@ registerPlugin(
             let staffGroups = [];
             let problemGroups = [];
 
-            config.staffGroups.forEach(group => {
+            config.staffGroups.forEach((group, index) => {
+                // check if necessary config options are set
                 if (group.id === undefined) return;
-                if (backend.getServerGroupByID(group.id) === undefined) return problemGroups.push(group.id);
+
+                // check if the staff group id points to valid group on teamspeak
+                if (backend.getServerGroupByID(group.id) === undefined) return problemGroups.push(index);
+
+                // apply defaults
                 if (group.clients === undefined || !group.clients.length) group.clients = [];
                 if (group.groups === undefined || !group.groups.length) {
                     group.groups = [group.id];
                 } else {
-                    group.groups.filter(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
+                    group.groups = group.groups.filter(id => backend.getServerGroupByID(id) !== undefined && id !== group.id);
                     group.groups.push(group.id);
                 }
                 if (group.name === undefined || group.name === '') {
                     group.name = '[size=12][B]' + backend.getServerGroupByID(group.id).name() + '[/B][/size]';
                 }
 
+                // if all error checks passed, mark it as valid
                 groupList = groupList.concat(group.groups);
                 staffGroups.push(group);
             });
 
             // notify the script user that there are invalid groups in the configuration
-            if (staffGroups.length && problemGroups.length)
+            if (problemGroups.length)
                 log(
-                    'There was at least one group found in your configuration which does not point to a valid group on your TeamSpeak server! They will be ignored. Problematic groups: ' +
+                    "There was at least one entry in your configuration which is invalid! This can happen if a required field is empty or if your group ID doesn't point to a valid group on your TeamSpeak server! Any invalid entries will be skipped. The entries with the following indexes are invalid: " +
                         problemGroups
                 );
 
@@ -1170,10 +1176,7 @@ registerPlugin(
             const channel = backend.getChannelByID(config.channel);
 
             // exit the script if no valid staff groups were found
-            if (!staffGroups.length)
-                return log(
-                    'There are no valid staff groups set in your script configuration! Make sure that all group IDs point to a valid group and the bot has enough permissions. Deactivating script...'
-                );
+            if (!staffGroups.length) return log('There are no valid staff groups set in your script configuration! There might be further output in the log. Deactivating script...');
 
             // validated groups config dump
             if (config.dev) console.log('staffGroups:', Object.entries(staffGroups));
