@@ -826,8 +826,16 @@ registerPlugin(
                     if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) {
                         removeClient(key);
                     } else {
-                        // remove all clients from database who do not have a relevant group
-                        if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
+                        // get relevant groups
+                        const relevantGroups = store.get(key)[1].filter(clientGroup => groupList.includes(clientGroup.id));
+
+                        // drop entry if no relevant groups are found
+                        if (!relevantGroups.length) return removeClient(key);
+
+                        // remove irrelevant groups
+                        if (relevantGroups.length !== store.get(key)[1].length) {
+                            storeClient(key, store.get(key)[0], relevantGroups);
+                        }
                     }
                 } else {
                     removeClient(key);
