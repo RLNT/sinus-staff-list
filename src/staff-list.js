@@ -9,7 +9,7 @@
 registerPlugin(
     {
         name: 'Staff List',
-        version: '1.10.3',
+        version: '1.10.4',
         description: 'With this script, the bot will automatically keep track of the online status of predefined staff members and post it to a chosen channel description.',
         author: 'RLNT',
         backends: ['ts3'],
@@ -343,7 +343,7 @@ registerPlugin(
                 indent: 1,
                 conditions: [
                     {
-                        field: 'removeCommand',
+                        field: 'dbRemoveCommand',
                         value: 0
                     }
                 ]
@@ -356,7 +356,7 @@ registerPlugin(
                 indent: 1,
                 conditions: [
                     {
-                        field: 'removeCommand',
+                        field: 'dbRemoveCommand',
                         value: 0
                     }
                 ]
@@ -370,7 +370,7 @@ registerPlugin(
                 indent: 1,
                 conditions: [
                     {
-                        field: 'removeCommand',
+                        field: 'dbRemoveCommand',
                         value: 0
                     }
                 ]
@@ -826,12 +826,33 @@ registerPlugin(
                     if (store.get(key)[1].some(clientGroup => typeof clientGroup !== 'object')) {
                         removeClient(key);
                     } else {
-                        // remove all clients from database who do not have a relevant group
-                        if (store.get(key)[1].some(clientGroup => !groupList.includes(clientGroup.id))) removeClient(key);
+                        // get relevant groups
+                        const relevantGroups = store.get(key)[1].filter(clientGroup => groupList.includes(clientGroup.id));
+
+                        // drop entry if no relevant groups are found
+                        if (!relevantGroups.length) return removeClient(key);
+
+                        // remove irrelevant groups
+                        if (relevantGroups.length !== store.get(key)[1].length) {
+                            storeClient(key, store.get(key)[0], relevantGroups);
+                        }
                     }
                 } else {
                     removeClient(key);
                 }
+            });
+        }
+
+        /**
+         * Dump the whole script database to find errors faster
+         * @returns {void} > nothing
+         */
+        function dumpDatabase() {
+            store.getKeys().forEach((key, index) => {
+                console.log(`${index} | uid: ${key} | nick: ${store.get(key)[0]}`);
+                store.get(key)[1].forEach((group, groupIndex) => {
+                    console.log(`${index} | ${groupIndex} | ${Object.entries(group)}`);
+                });
             });
         }
 
@@ -868,6 +889,7 @@ registerPlugin(
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
                 updateStaffClients();
+                if (config.dev) log(`Removed client (${uid}) from database!`);
                 return true;
             } else {
                 return false;
@@ -1178,8 +1200,12 @@ registerPlugin(
             // exit the script if no valid staff groups were found
             if (!staffGroups.length) return log('There are no valid staff groups set in your script configuration! There might be further output in the log. Deactivating script...');
 
-            // validated groups config dump
-            if (config.dev) console.log('staffGroups:', Object.entries(staffGroups));
+            if (config.dev) {
+                // validated groups config dump
+                console.log('staffGroups:', Object.entries(staffGroups));
+                // dump database
+                dumpDatabase();
+            }
 
             // validate database
             validateDatabase();
@@ -1391,6 +1417,9 @@ registerPlugin(
                             break;
                     }
 
+                    // log command execution
+                    if (config.dev) log(`Invoker ${client.uid()} executed db-remove command!`);
+
                     // perform the actual command, count deletions to give feedback
                     let deleted = 0;
                     store.getKeys().forEach(key => {
@@ -1441,13 +1470,19 @@ registerPlugin(
                             break;
                     }
 
-                    // perform the actual command
+                    // get uid from command message
                     const uid = message.substring(config.rCommand.length, message.length).trim();
+
+                    // perform the actual command
                     if (!uid) {
                         // tell invoker that a uid has to be provided as argument
                         client.chat(config.rArgument);
                         return;
                     }
+
+                    // log command execution
+                    if (config.dev) log(`Invoker ${client.uid()} executed remove command for uid ${uid}!`);
+
                     if (!uid.match(uidPattern)) {
                         // tell invoker that provided argument is not a valid uid
                         client.chat(config.rInvalid.replace('%arg%', uid));
@@ -1460,6 +1495,7 @@ registerPlugin(
                     } else {
                         // tell invoker that provided entry was not found
                         client.chat(config.rNotFound.replace('%uid%', uid));
+                        if (config.dev) log(`Command execution failed!`);
                     }
                 }
             });
