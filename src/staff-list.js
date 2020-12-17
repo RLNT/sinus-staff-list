@@ -868,6 +868,7 @@ registerPlugin(
             if (store.getKeys().includes(uid)) {
                 store.unset(uid);
                 updateStaffClients();
+                if (config.dev) log(`Removed client (${uid}) from database!`);
                 return true;
             } else {
                 return false;
@@ -1391,6 +1392,9 @@ registerPlugin(
                             break;
                     }
 
+                    // log command execution
+                    if (config.dev) log(`Invoker ${client.uid()} executed db-remove command!`);
+
                     // perform the actual command, count deletions to give feedback
                     let deleted = 0;
                     store.getKeys().forEach(key => {
@@ -1441,13 +1445,19 @@ registerPlugin(
                             break;
                     }
 
-                    // perform the actual command
+                    // get uid from command message
                     const uid = message.substring(config.rCommand.length, message.length).trim();
+
+                    // perform the actual command
                     if (!uid) {
                         // tell invoker that a uid has to be provided as argument
                         client.chat(config.rArgument);
                         return;
                     }
+
+                    // log command execution
+                    if (config.dev) log(`Invoker ${client.uid()} executed remove command for uid ${uid}!`);
+
                     if (!uid.match(uidPattern)) {
                         // tell invoker that provided argument is not a valid uid
                         client.chat(config.rInvalid.replace('%arg%', uid));
@@ -1460,6 +1470,7 @@ registerPlugin(
                     } else {
                         // tell invoker that provided entry was not found
                         client.chat(config.rNotFound.replace('%uid%', uid));
+                        if (config.dev) log(`Command execution failed!`);
                     }
                 }
             });
