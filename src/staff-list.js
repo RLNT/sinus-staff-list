@@ -343,7 +343,7 @@ registerPlugin(
                 indent: 1,
                 conditions: [
                     {
-                        field: 'removeCommand',
+                        field: 'dbRemoveCommand',
                         value: 0
                     }
                 ]
@@ -356,7 +356,7 @@ registerPlugin(
                 indent: 1,
                 conditions: [
                     {
-                        field: 'removeCommand',
+                        field: 'dbRemoveCommand',
                         value: 0
                     }
                 ]
@@ -370,7 +370,7 @@ registerPlugin(
                 indent: 1,
                 conditions: [
                     {
-                        field: 'removeCommand',
+                        field: 'dbRemoveCommand',
                         value: 0
                     }
                 ]
