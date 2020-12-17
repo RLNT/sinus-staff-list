@@ -836,6 +836,19 @@ registerPlugin(
         }
 
         /**
+         * Dump the whole script database to find errors faster
+         * @returns {void} > nothing
+         */
+        function dumpDatabase() {
+            store.getKeys().forEach((key, index) => {
+                console.log(`${index} | uid: ${key} | nick: ${store.get(key)[0]}`);
+                store.get(key)[1].forEach((group, groupIndex) => {
+                    console.log(`${index} | ${groupIndex} | ${Object.entries(group)}`);
+                });
+            });
+        }
+
+        /**
          * Store a client to the script's database if they are not already stored;
          * Can also update information if entry is alreadyp present;
          * @param {String} uid > the UID of the client to store
@@ -1179,8 +1192,12 @@ registerPlugin(
             // exit the script if no valid staff groups were found
             if (!staffGroups.length) return log('There are no valid staff groups set in your script configuration! There might be further output in the log. Deactivating script...');
 
-            // validated groups config dump
-            if (config.dev) console.log('staffGroups:', Object.entries(staffGroups));
+            if (config.dev) {
+                // validated groups config dump
+                console.log('staffGroups:', Object.entries(staffGroups));
+                // dump database
+                dumpDatabase();
+            }
 
             // validate database
             validateDatabase();
