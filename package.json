@@ -8,7 +8,7 @@
   "scripts": {},
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^7.19.0",
+    "eslint": "^7.20.0",
     "prettier": "^2.2.1",
     "prettier-plugin-package": "^1.2.0",
     "sinusbot-scripting-engine": "^1.0.18"
